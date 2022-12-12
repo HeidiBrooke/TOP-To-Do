@@ -1,7 +1,7 @@
 import './style.css';
 
 
-let div = document.createElement('div');
+const div = document.createElement('div');
 div.setAttribute('id', 'content');
 document.body.appendChild(div);
 
