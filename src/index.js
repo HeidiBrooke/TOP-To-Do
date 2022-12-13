@@ -66,6 +66,9 @@ const controller = () => {
     const viewAll = () => {
         console.log('All cards are: ' + all);
         console.log('all decks are: ' + deckArray);
+        all.forEach(cardElement => {
+            console.log(cardElement);
+        })
         controller();
     }
 
@@ -92,7 +95,10 @@ const controller = () => {
         console.log(currentDeck);
         console.log(typeof currentDeck);
         console.log(typeof currentDeck.cardsArray[0]);
-        console.log(currentDeck.deckName + " contents are: " + currentDeck.cardsArray[0]);
+        console.log(currentDeck.deckName + " contents are: ");
+        currentDeck.cardsArray.forEach(cardElement => {
+            console.log(cardElement);
+        })
         controller();
     }
 
