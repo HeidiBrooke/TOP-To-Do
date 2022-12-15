@@ -2,85 +2,37 @@ import './style.css';
 import card from './card';
 import deck from './deck';
 
-const deckArray = [];
-// const allCardArray = () =>{
-//     const allCardsName = 'All';
-//     const allCards = [];
-//     return{
-//         allCardsName, allCards
-//     };
-// };
+const aDeck = deck();
+const aCard = card();
+
+
 
 const all = [];
-deckArray.push(all);
+const deckArray = [];
+const table = deckArray;
 
 
 const controller = () => {
-    //console.log("Enter thisApp.createCard(name, deck) to create a card.");
-    //console.log("Enter thisApp.createDeck(name) to create a deck.");
-    //console.log("Enter thisApp.viewDeck(name) to view the contents of a deck.");
+    // let thisCard;
+    // let thisDeck;
     
-
-    const createDeck = (name) => {
-        const adeck = prompt('enter a name for a deck');
-        const newDeck = deck(adeck);
-        console.log(newDeck);
-        deckArray.push(newDeck);
-        controller();
-        // return{newDeck};
-    };
-    
-    const createCard = (name, aDeck) => {
-        const aname = prompt('enter a name for a card');
-        const thisDeck = prompt('enter a name of a deck');
-        const newCard = card(aname, thisDeck);
-        console.log(thisDeck);
-        console.log(typeof thisDeck);
-        console.log(newCard);  
-        all.push(newCard);
-
-        let currentDeck; 
-        deckArray.forEach(deckElement => {
-            console.log(deckElement)
-            currentDeck = thisDeck;
-            console.log(currentDeck);
-            console.log(typeof currentDeck);
-            if(deckElement.deckName === thisDeck){
-                currentDeck = deckElement;
-                console.log(currentDeck);
-                console.log(typeof currentDeck);
-            }
-            else {
-                currentDeck = all;
-                console.log(currentDeck);
-                console.log(typeof currentDeck);
-            }
-            
-        });
-        console.log(currentDeck);
-        console.log(typeof currentDeck);
-        currentDeck.cardsArray.push(newCard);
-        controller();
-    };
-
     const viewAll = () => {
         console.log('All cards are: ' + all);
-        console.log('all decks are: ' + deckArray);
+        console.log('all decks are: ' + table);
         all.forEach(cardElement => {
-            console.log(cardElement);
+            console.log('all' + cardElement);
         })
         controller();
     }
 
     const viewDeck = () => {
-        const aDeck = prompt("deck name:");
+        const thisDeck = prompt("deck name:");
         let currentDeck; 
-        deckArray.forEach(deckElement => {
+        table.forEach(deckElement => {
             console.log(deckElement)
-            currentDeck = aDeck;
             console.log(currentDeck);
             console.log(typeof currentDeck);
-            if(deckElement.deckName === aDeck){
+            if(deckElement.deckName === thisDeck){
                 currentDeck = deckElement;
                 console.log(currentDeck);
                 console.log(typeof currentDeck);
@@ -101,14 +53,62 @@ const controller = () => {
         })
         controller();
     }
+    const createDeck = (name) => {
+        const thename = prompt("deck name:");
+        const thisDeck = deck(thename);
+        table.push(thisDeck);
+        console.log( 'the deck created is: ' + thisDeck);
+        console.log( 'its name is: ' + thisDeck.deckName);
+    }
+
+    const createCard = (name) => {
+        const thename = prompt("card name:");
+        const newCard = card(thename); 
+        all.push(newCard);
+    }
+
+    const getCard = (name) => {
+        let theCard;
+        all.forEach(cardElement => {
+            if(cardElement.cardName === name){
+                theCard = cardElement;
+            }
+            else {
+                theCard = null;
+            }
+            
+        })
+        return theCard;
+    }
+
+    const getDeck = (name) => {
+        let theDeck;
+        table.forEach(deckElement => {deck
+            console.log('the  deck name is: ' + deckElement.deckName)
+            if(deckElement.deckName === name){
+                console.log('it matched!')
+                console.log(deckElement.deckName, name);
+                theDeck = deckElement;
+            }
+            console.log('getting deck: ' + theDeck);
+            
+        })
+        return theDeck;
+    }
+
+    const addCardtoDeck = (thisCard, esoDeck) => {
+        console.log(esoDeck.deckName);
+        thisCard.cardDeck = esoDeck.deckName;
+        esoDeck.cardsArray.push(thisCard);
+    }
 
     return {
-         createCard, createDeck, viewAll, viewDeck
+        viewAll, viewDeck, createCard, getCard, getDeck, addCardtoDeck, createDeck
     };
 }
 
-
 const game = controller();
+
 const starter = () => {
     const choice = prompt('choose a function: createDeck, or createCard, or viewDecks');
     if (choice === "createDeck"){
@@ -123,6 +123,16 @@ const starter = () => {
     else if (choice === 'viewAll'){
         game.viewAll();
     }
+    else if (choice === 'addCardtoDeck'){
+        const theCardName = prompt('what card?');
+        const theCard = game.getCard(theCardName);
+        const theDeckName = prompt('what deck?');
+        console.log('using deck name: ' + theDeckName);
+        const anDeck = game.getDeck(theDeckName);
+        console.log('the deck entering the function is: ' + anDeck)
+
+        game.addCardtoDeck(theCard, anDeck);
+    }
     const keepGoing = prompt('want to continue? y/n');
     if (keepGoing === 'y') {
         starter()
@@ -130,11 +140,3 @@ const starter = () => {
 }
 
 starter();
-
-
-
-// const div = document.createElement('div');
-// div.setAttribute('id', 'content');
-// document.body.appendChild(div);
-
-// div.textContent = "Hi";
