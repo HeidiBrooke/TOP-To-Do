@@ -7,8 +7,10 @@ const aCard = card();
 
 
 
-const all = [];
+const all = deck("all");
+console.log(all);
 const deckArray = [];
+deckArray.push(all);
 const table = deckArray;
 
 
@@ -29,6 +31,7 @@ const controller = () => {
         const thisDeck = prompt("deck name:");
         let currentDeck; 
         table.forEach(deckElement => {
+            console.log('in for each')
             console.log(deckElement)
             console.log(currentDeck);
             console.log(typeof currentDeck);
@@ -44,9 +47,8 @@ const controller = () => {
             }
             
         });
-        console.log(currentDeck);
+        console.log("1" + currentDeck);
         console.log(typeof currentDeck);
-        console.log(typeof currentDeck.cardsArray[0]);
         console.log(currentDeck.deckName + " contents are: ");
         currentDeck.cardsArray.forEach(cardElement => {
             console.log(cardElement);
@@ -64,12 +66,12 @@ const controller = () => {
     const createCard = (name) => {
         const thename = prompt("card name:");
         const newCard = card(thename); 
-        all.push(newCard);
+        all.cardsArray.push(newCard);
     }
 
     const getCard = (name) => {
         let theCard;
-        all.forEach(cardElement => {
+        all.cardsArray.forEach(cardElement => {
             if(cardElement.cardName === name){
                 theCard = cardElement;
             }
@@ -99,11 +101,36 @@ const controller = () => {
     const addCardtoDeck = (thisCard, esoDeck) => {
         console.log(esoDeck.deckName);
         thisCard.cardDeck = esoDeck.deckName;
-        esoDeck.cardsArray.push(thisCard);
+        esoDeck.cardsArray.push(thisCard.cardName);
+    }
+
+    const deleteCardFromDeck = (thisCard, thisDeck) => {
+        const index = thisDeck.cardsArray.indexOf(thisCard.cardName);
+        if (index > -1){
+            thisDeck.cardsArray.splice(index, 1);
+        }
+        return thisDeck;
+    }
+
+    const deleteCard = (thisCard) => {
+        const index = all.cardsArray.indexOf(thisCard);
+        if (index > -1){
+            all.cardsArray.splice(index, 1);
+        }
+        return all;
+    }
+
+    const deleteDeck = (aDeckName) => {
+        const deckObj = getDeck(aDeckName);
+        const index = table.indexOf(deckObj);
+        if (index > -1){
+            table.splice(index, 1);
+        }
+        return table;
     }
 
     return {
-        viewAll, viewDeck, createCard, getCard, getDeck, addCardtoDeck, createDeck
+        viewAll, viewDeck, createCard, createDeck, getCard, getDeck, addCardtoDeck, deleteCardFromDeck, deleteCard, deleteDeck 
     };
 }
 
@@ -132,6 +159,25 @@ const starter = () => {
         console.log('the deck entering the function is: ' + anDeck)
 
         game.addCardtoDeck(theCard, anDeck);
+    }
+    else if (choice === 'deleteCardFromDeck'){
+        const theCardName = prompt('what card?');
+        const theCard = game.getCard(theCardName);
+        const theDeckName = prompt('what deck?');
+        console.log('using deck name: ' + theDeckName);
+        const anDeck = game.getDeck(theDeckName);
+        console.log('the deck entering the function is: ' + anDeck)
+
+        game.deleteCardFromDeck(theCard, anDeck);
+    }
+    else if (choice === 'deleteCard'){
+        const theCardName = prompt('what card?');
+        const thisCard = game.getCard(theCardName);
+        game.deleteCard(thisCard);
+    }
+    else if (choice === 'deleteDeck'){
+        const theDeckName = prompt('what deck?');
+        game.deleteDeck(theDeckName);
     }
     const keepGoing = prompt('want to continue? y/n');
     if (keepGoing === 'y') {
