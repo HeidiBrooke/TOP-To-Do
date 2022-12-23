@@ -21,7 +21,7 @@ const controller = () => {
     const viewAll = () => {
         console.log('All cards are: ' + all);
         console.log('all decks are: ' + table);
-        all.forEach(cardElement => {
+        all.cardsArray.forEach(cardElement => {
             console.log('all' + cardElement);
         })
         controller();
@@ -30,6 +30,8 @@ const controller = () => {
     const viewDeck = () => {
         const thisDeck = prompt("deck name:");
         let currentDeck; 
+        let wasMatched = false;
+        console.log(thisDeck);
         table.forEach(deckElement => {
             console.log('in for each')
             console.log(deckElement)
@@ -39,14 +41,16 @@ const controller = () => {
                 currentDeck = deckElement;
                 console.log(currentDeck);
                 console.log(typeof currentDeck);
-            }
-            else {
+                wasMatched = true;
+                
+            }  
+        });
+        if(wasMatched === false){
                 currentDeck = all;
                 console.log(currentDeck);
                 console.log(typeof currentDeck);
-            }
             
-        });
+        }
         console.log("1" + currentDeck);
         console.log(typeof currentDeck);
         console.log(currentDeck.deckName + " contents are: ");
@@ -95,14 +99,24 @@ const controller = () => {
             console.log('getting deck: ' + theDeck);
             
         })
+        if(theDeck === undefined){
+            const deckName = prompt('that deck does not exist, please enter another name:')
+            theDeck = getDeck(deckName);
+        }
+        console.log(theDeck);
         return theDeck;
     }
 
-    const addCardtoDeck = (thisCard, esoDeck) => {
-        console.log(esoDeck.deckName);
-        thisCard.cardDeck = esoDeck.deckName;
-        esoDeck.cardsArray.push(thisCard.cardName);
+    const addCardtoDeck = (thisCard, thisDeck) => {
+        // console.log(esoDeck.deckName);
+        // if(esoDeck === undefined){
+        //     const deckName = prompt('that deck does not exist, please enter another name:')
+        //     esoDeck = getDeck(deckName);
+        // }
+        thisCard.cardDeck = thisDeck.deckName;
+        thisDeck.cardsArray.push(thisCard.cardName);
     }
+
 
     const deleteCardFromDeck = (thisCard, thisDeck) => {
         const index = thisDeck.cardsArray.indexOf(thisCard.cardName);
@@ -129,8 +143,28 @@ const controller = () => {
         return table;
     }
 
+    const moveCard = (theCardName, deckOneName, deckTwoName) => {
+        const thisCard = getCard(theCardName);
+        const deckOne = getDeck(deckOneName);
+        const deckTwo = getDeck(deckTwoName);
+        console.log(thisCard, deckOne, deckTwo);
+        deleteCardFromDeck(thisCard, deckOne);
+        addCardtoDeck(thisCard, deckTwo);
+    }
+
+    // const checkEntry = (name, object) => {
+    //     if(object === 'deck'){
+    //         const theName = getDeck(name)
+    //         if(theName === undefined){
+    //             const deckName = prompt('that deck does not exist, please enter another name:')
+    //             esoDeck = getDeck(deckName);
+    //         }
+    //     }
+
+    // }
+
     return {
-        viewAll, viewDeck, createCard, createDeck, getCard, getDeck, addCardtoDeck, deleteCardFromDeck, deleteCard, deleteDeck 
+        viewAll, viewDeck, createCard, createDeck, getCard, getDeck, addCardtoDeck, deleteCardFromDeck, deleteCard, deleteDeck, moveCard 
     };
 }
 
@@ -178,6 +212,12 @@ const starter = () => {
     else if (choice === 'deleteDeck'){
         const theDeckName = prompt('what deck?');
         game.deleteDeck(theDeckName);
+    }
+    else if (choice === 'moveCard'){
+        const theCardName = prompt('what card?');
+        const theFirstDeckName = prompt('from: (what deck?)');
+        const theSecondDeckName = prompt('to: (what deck?)');
+        game.moveCard(theCardName, theFirstDeckName, theSecondDeckName);
     }
     const keepGoing = prompt('want to continue? y/n');
     if (keepGoing === 'y') {
