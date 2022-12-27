@@ -56,6 +56,7 @@ const controlls = () => {
             })
             controller();
         }
+
         const createDeck = (name) => {
             const thisDeck = deck(name);
             table.push(thisDeck);
@@ -103,11 +104,6 @@ const controlls = () => {
         }
     
         const addCardtoDeck = (thisCard, thisDeck) => {
-            // console.log(esoDeck.deckName);
-            // if(esoDeck === undefined){
-            //     const deckName = prompt('that deck does not exist, please enter another name:')
-            //     esoDeck = getDeck(deckName);
-            // }
             thisCard.cardDeck = thisDeck.deckName;
             thisDeck.cardsArray.push(thisCard.cardName);
         }
@@ -146,15 +142,43 @@ const controlls = () => {
             deleteCardFromDeck(thisCard, deckOne);
             addCardtoDeck(thisCard, deckTwo);
         }
+
+        const viewCard = (theCardName) => {
+            const thisCard = getCard(theCardName);
+            for (const prop in thisCard) {
+                console.log(`obj.${prop} = ${thisCard[prop]}`);
+              }
+           }
+
     
        const setDate = (theCardName) => {
         const thisCard = getCard(theCardName);
         const aDate = prompt('enter the due date in the form of MM.DD.YY:');
         thisCard.cardDate = new Date(aDate);
        }
+
+       const addStep = (theCardName) => {
+        const thisCard = getCard(theCardName);
+        const i = thisCard.cardSteps.length;
+        thisCard.cardSteps[i] = prompt("enter your step:");
+       }
+
+       const setStep = (theCardName) => {
+        const thisCard = getCard(theCardName);
+        const i = prompt('what index?');
+        thisCard.cardSteps[i] = prompt("enter your step:");
+       }
+
+       const setComplete = (theCardName) => {
+        const thisCard = getCard(theCardName);
+        thisCard.cardCompleteValue = Number(prompt("is your task complete? If so, enter a '1' otherwise eneter '0'."));
+       }
+    
+
+       
     
         return {
-            viewAll, viewDeck, createCard, createDeck, getCard, getDeck, addCardtoDeck, deleteCardFromDeck, deleteCard, deleteDeck, moveCard, setDate 
+            viewAll, viewCard, viewDeck, createCard, createDeck, getCard, getDeck, addCardtoDeck, deleteCardFromDeck, deleteCard, deleteDeck, moveCard, setDate, addStep, setComplete, setStep
         };
     }
     
@@ -216,6 +240,23 @@ const controlls = () => {
             const theCardName = prompt('what card?');
             control.setDate(theCardName);
         }
+        else if (choice === 'addStep'){
+            const theCardName = prompt('what card?');
+            control.addStep(theCardName);
+        }
+        else if (choice === 'setStep'){
+            const theCardName = prompt('what card?');
+            control.setStep(theCardName);
+        }
+        else if (choice === 'setComplete'){
+            const theCardName = prompt('what card?');
+            control.setComplete(theCardName);
+        }
+        else if (choice === 'viewCard'){
+            const theCardName = prompt('what card?');
+            control.viewCard(theCardName);
+        }
+
         const keepGoing = prompt('want to continue? y/n');
         if (keepGoing === 'y') {
             starter()
