@@ -149,7 +149,8 @@ const controlls = () => {
     
        const setDate = (theCardName) => {
         const thisCard = getCard(theCardName);
-        thisCard.cardDate = prompt('enter the due date in the form of MM.DD.YY:');
+        const aDate = prompt('enter the due date in the form of MM.DD.YY:');
+        thisCard.cardDate = new Date(aDate);
        }
     
         return {
