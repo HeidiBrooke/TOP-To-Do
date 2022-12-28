@@ -260,7 +260,7 @@ const controlls = () => {
     }
   };
 
-  starter();
+//   starter();
 };
 
 export default controlls;
