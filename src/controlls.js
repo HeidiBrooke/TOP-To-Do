@@ -4,11 +4,7 @@ import deck from "./deck";
 
 const controlls = () => {
 
-  const all = deck("all");
-  console.log(all);
-  const deckArray = [];
-  deckArray.push(all);
-  const table = deckArray;
+  
 
   const controller = () => {
     const viewAll = () => {
