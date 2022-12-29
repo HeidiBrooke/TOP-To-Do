@@ -1,13 +1,10 @@
-import controlls from './controlls';
+import * as controller from './controlls';
+import {defaultDeck, defaultCard, deckArray, all} from './controlls';
 import './style.css';
 import card from "./card";
 import deck from "./deck";
 
-const all = deck("all");
-  console.log(all);
-  const deckArray = [];
-  deckArray.push(all);
-  const table = deckArray;
+
 
 const content = document.createElement('div');
 content.setAttribute('id', 'content');
@@ -44,17 +41,78 @@ div.setAttribute('id', 'title');
 cardDock.appendChild(div);
 div.textContent = 'Table';
 
-controlls();
+const cardArea = document.createElement('div');
+cardArea.setAttribute('id', 'cardArea');
+cardDock.appendChild(cardArea);
+
+
 
 const drawDecks = (arrayOfDecks) => {
-    arrayOfDecks.forEach(deck => {
-        div = document.createElement('div');
-        div.setAttribute('id', 'deck');
-        deckDock.appendChild(div);
-        div.textContent = deck.deckName;
+    console.log('running drawDecks')
+    console.log(deckArray[1]);
+    arrayOfDecks.forEach(aDeck => {
+        if((arrayOfDecks.indexOf(aDeck)) !== 0){
+            const deckDiv = document.createElement('div');
+            deckDiv.setAttribute('id', 'deck');
+            deckDock.appendChild(deckDiv);
+
+            const deckTitleDiv = document.createElement('div');
+            deckTitleDiv.setAttribute('id', 'deckTitle');
+            deckDiv.appendChild(deckTitleDiv);
+            deckTitleDiv.textContent = aDeck.deckName;
+        }
+        
         });
 
 }
 
+const drawAllCardsStack = (aDeck) => {
+    const cardDiv = document.createElement('div');
+    cardDiv.setAttribute('id', 'cardBig');
+    cardDock.appendChild(cardDiv);
+    console.log(aDeck.cardsArray[aDeck.bookmark]);
+    const thisBookmark = aDeck.bookmark;
+    const theCard = aDeck.cardsArray[thisBookmark].cardName;
+
+    const cardTitleDiv = document.createElement('div');
+    cardTitleDiv.setAttribute('id', 'cardTitle');
+    cardDiv.appendChild(cardTitleDiv);
+    cardTitleDiv.textContent = theCard.CardName;
+}
+
+const drawCardStack = (aDeck) => {
+    let fakeCard = document.createElement('div');
+    fakeCard.setAttribute('id', 'cardBig');
+    fakeCard.setAttribute('class', 'stack');
+    cardArea.appendChild(fakeCard);
+
+    fakeCard = document.createElement('div');
+    fakeCard.setAttribute('id', 'cardBig');
+    fakeCard.setAttribute('class', 'stack1');
+    cardArea.appendChild(fakeCard);
+
+    console.log('running drawCardStack');
+    const cardDiv = document.createElement('div');
+    cardDiv.setAttribute('id', 'cardBig');
+    cardArea.appendChild(cardDiv);
+    console.log(aDeck);
+    const thisBookmark = aDeck.bookmark;
+    console.log(aDeck.cardsArray[thisBookmark]);
+    const thisCardName = aDeck.cardsArray[thisBookmark];
+    const theCard = controller.getCard(thisCardName);
+
+    
+
+    const cardTitleDiv = document.createElement('div');
+    cardTitleDiv.setAttribute('id', 'cardTitle');
+    cardDiv.appendChild(cardTitleDiv);
+    cardTitleDiv.textContent = theCard.cardName;
+
+    
+    
+}
+
+drawCardStack(defaultDeck);
 drawDecks(deckArray);
+
 

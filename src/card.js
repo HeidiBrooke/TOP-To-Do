@@ -3,13 +3,13 @@ const card = (name) => {
   const cardSteps = [];
   const cardDate = "";
   const cardCompleteValue = 0;
-  const cardDeck = ["all"];
+  const cardDecks = ["all"];
   return {
     cardName,
     cardCompleteValue,
     cardDate,
     cardSteps,
-    cardDeck,
+    cardDecks,
   };
 };
 export default card;
