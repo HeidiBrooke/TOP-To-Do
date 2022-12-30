@@ -45,6 +45,18 @@ const cardArea = document.createElement('div');
 cardArea.setAttribute('id', 'cardArea');
 cardDock.appendChild(cardArea);
 
+const forwardButton = document.createElement('div');
+forwardButton.setAttribute('id', 'nextButton');
+forwardButton.setAttribute('class', 'forwardButton');
+cardArea.appendChild(forwardButton);
+forwardButton.textContent = '>';
+
+const backwardButton = document.createElement('div');
+backwardButton.setAttribute('id', 'nextButton');
+backwardButton.setAttribute('class', 'backwardButton');
+cardArea.appendChild(backwardButton);
+backwardButton.textContent = '<';
+
 
 
 const drawDecks = (arrayOfDecks) => {

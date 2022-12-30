@@ -70,8 +70,8 @@ div {
 
 
 #cardArea{
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 60px 1fr 60px;
     justify-content: center;
     align-items: center;
     position: relative;
@@ -85,11 +85,12 @@ div {
     border-radius: 4px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.16) 0 7px 9px -7px;
-    justify-content: center;
+    justify-items: center;
     align-items: center;
 }
 
 #deckTitle, #cardTitle{
+    margin-top: 8px;
     font-family: 'Raleway', sans-serif;
     font-size: 14px;
     color: rgb(63, 135, 152);
@@ -97,8 +98,31 @@ div {
     text-transform: uppercase;
 }
 
+#nextButton{
+    justify-self: right;
+    color: white;
+    color: rgb(80, 163, 182);
+    font-family: 'Raleway', sans-serif;
+    font-size: 72px;
+    border: none;
+}
+
+.forwardButton{
+    justify-self: left;
+    grid-column: 3/4;
+}
+
+.backwardButton{
+    justify-self: right;
+    grid-column: 1/2;
+    grid-row: 1/2;
+}
+
 
 #cardBig{
+    grid-column: 2/3;
+    grid-row: 1/2;
+    justify-self: center;
     display: flex;
     width: 240px;
     height: 360px;
@@ -106,7 +130,7 @@ div {
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.1) 0 4px 5px 4px;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 1;
 
 }
@@ -114,7 +138,7 @@ div {
 .stack0{
     position: absolute;
     top: 4px;
-    left: 125px;
+    left: 65px;
     z-index: -1;
     transform: rotate(4deg);
 }
@@ -122,7 +146,7 @@ div {
 .stack1{
     position: absolute;
     top: 4px;
-    left: 120px;
+    left: 60px;
     z-index: -2;
     transform: rotate(2deg);
 }
