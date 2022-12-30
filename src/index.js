@@ -46,16 +46,19 @@ cardArea.setAttribute('id', 'cardArea');
 cardDock.appendChild(cardArea);
 
 const forwardButton = document.createElement('div');
-forwardButton.setAttribute('id', 'nextButton');
-forwardButton.setAttribute('class', 'forwardButton');
+forwardButton.setAttribute('class', 'nextButton');
+forwardButton.setAttribute('id', 'forwardButton');
 cardArea.appendChild(forwardButton);
 forwardButton.textContent = '>';
 
 const backwardButton = document.createElement('div');
-backwardButton.setAttribute('id', 'nextButton');
-backwardButton.setAttribute('class', 'backwardButton');
+backwardButton.setAttribute('class', 'nextButton');
+backwardButton.setAttribute('id', 'backwardButton');
 cardArea.appendChild(backwardButton);
 backwardButton.textContent = '<';
+
+const currentDeck = defaultDeck;
+
 
 
 
@@ -117,8 +120,10 @@ const drawTitleDiv = () => {
 const getBookmarkedCard = (aDeck) => {
     const thisBookmark = aDeck.bookmark;
     const thisCardName = aDeck.cardsArray[thisBookmark];
-    const theCard = controller.getCard(thisCardName);
-    return theCard;
+    console.log(thisCardName);
+    const aCard = controller.getCard(thisCardName);
+    console.log(aCard);
+    return aCard;
 }
 
 const populateCard = (aCard) => {
@@ -130,12 +135,40 @@ const populateCard = (aCard) => {
 }
 
 const drawCardStack = (aDeck) => {
+    console.log(aDeck);
     drawBackgroundCards(2);
     const theCard = getBookmarkedCard(aDeck);
+    console.log(theCard);
     populateCard(theCard);    
 }
 
+const advanceBookmark = () => {
+    currentDeck.bookmark++;
+    console.log(currentDeck);
+    console.log(currentDeck.bookmark);
+    drawCardStack(currentDeck);
+}
+
+const previousBookmark = () => {
+    currentDeck.bookmark--;
+    drawCardStack(currentDeck);
+}
+
+const addEventListeners = (elementName, aFunction) =>{
+    const element = document.getElementById(`${elementName}`);
+    console.log(element);
+    console.log(aFunction);
+    element.addEventListener('click', aFunction);
+}
+
+const addForwardBackwardListeners = () => {
+    addEventListeners('forwardButton', advanceBookmark);
+    addEventListeners('backwardButton', previousBookmark);
+}
+
+
 drawCardStack(defaultDeck);
 drawDecks(deckArray);
+addForwardBackwardListeners();
 
 

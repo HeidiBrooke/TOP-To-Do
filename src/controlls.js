@@ -10,10 +10,12 @@ export const table = deckArray;
 export const defaultDeck = deck('To-Do');
 export const defaultCard = card('Get Groceries');
 export const defaultCard2 = card('Mail Thank You Notes');
-all.cardsArray.push(defaultCard)
+all.cardsArray.push(defaultCard);
+all.cardsArray.push(defaultCard2);
 defaultDeck.cardsArray.push(defaultCard.cardName);
 defaultDeck.cardsArray.push(defaultCard2.cardName);
 deckArray.push(defaultDeck);
+
 
     const viewAll = () => {
       console.log(`All cards are: ${all}`);
@@ -73,18 +75,21 @@ deckArray.push(defaultDeck);
     };
 
     export const getCard = (name) => {
+        console.log(name)
       let theCard;
       all.cardsArray.forEach((cardElement) => {
+        console.log(cardElement.cardName);
+        console.log(name);
         if (cardElement.cardName === name) {
           theCard = cardElement;
         }
       });
-      if (theCard === undefined) {
-        const cardName = prompt(
-          "that card does not exist, please enter another name:"
-        );
-        theCard = getCard(cardName);
-      }
+    //   if (theCard === undefined) {
+    //     // const cardName = prompt(
+    //     //   "that card does not exist, please enter another name:"
+    //     // );
+    //     // theCard = getCard(cardName);
+    //   }
       return theCard;
     };
 
@@ -100,10 +105,10 @@ deckArray.push(defaultDeck);
         console.log("getting deck: " + theDeck);
       });
       if (theDeck === undefined) {
-        const deckName = prompt(
-          "that deck does not exist, please enter another name:"
-        );
-        theDeck = getDeck(deckName);
+        // const deckName = prompt(
+        //   "that deck does not exist, please enter another name:"
+        // );
+        // theDeck = getDeck(deckName);
       }
       console.log(theDeck);
       return theDeck;
