@@ -31,15 +31,39 @@ logo.setAttribute('id', 'logo');
 header.appendChild(logo);
 logo.textContent = 'Shuffle';
 
+const deckDockMenu = document.createElement('div');
+deckDockMenu.setAttribute('class', 'menu');
+deckDock.appendChild(deckDockMenu);
+
 let div = document.createElement('div');
-div.setAttribute('id', 'title');
-deckDock.appendChild(div);
+div.setAttribute('class', 'title');
+deckDockMenu.appendChild(div);
 div.textContent = 'Decks';
 
+const addDeckButton = document.createElement('div');
+addDeckButton.setAttribute('id', 'addDeckButton');
+addDeckButton.setAttribute('class', 'title')
+deckDockMenu.appendChild(addDeckButton);
+addDeckButton.textContent = '+';
+
+const deckArea = document.createElement('div');
+deckArea.setAttribute('class', 'deckArea');
+deckDock.appendChild(deckArea);
+
+const cardDockMenu = document.createElement('div');
+cardDockMenu.setAttribute('class', 'menu');
+cardDock.appendChild(cardDockMenu);
+
 div = document.createElement('div');
-div.setAttribute('id', 'title');
-cardDock.appendChild(div);
-div.textContent = 'Table';
+div.setAttribute('class', 'title');
+cardDockMenu.appendChild(div);
+div.textContent = 'Cards';
+
+const addCardButton = document.createElement('div');
+addCardButton.setAttribute('id', 'addCardButton');
+addCardButton.setAttribute('class', 'title')
+cardDockMenu.appendChild(addCardButton);
+addCardButton.textContent = '+';
 
 const cardArea = document.createElement('div');
 cardArea.setAttribute('id', 'cardArea');
@@ -57,10 +81,7 @@ backwardButton.setAttribute('id', 'backwardButton');
 cardArea.appendChild(backwardButton);
 backwardButton.textContent = '<';
 
-const currentDeck = defaultDeck;
-
-
-
+export const currentDeck = defaultDeck;
 
 const drawDecks = (arrayOfDecks) => {
     console.log('running drawDecks')
@@ -68,8 +89,8 @@ const drawDecks = (arrayOfDecks) => {
     arrayOfDecks.forEach(aDeck => {
         if((arrayOfDecks.indexOf(aDeck)) !== 0){
             const deckDiv = document.createElement('div');
-            deckDiv.setAttribute('id', 'deck');
-            deckDock.appendChild(deckDiv);
+            deckDiv.setAttribute('class', 'deck');
+            deckArea.appendChild(deckDiv);
 
             const deckTitleDiv = document.createElement('div');
             deckTitleDiv.setAttribute('id', 'deckTitle');
@@ -98,7 +119,7 @@ const drawAllCardsStack = (aDeck) => {
 const drawBackgroundCards = (num) => {
     for(let i = 0; i<num; i++ ){
     const fakeCard = document.createElement('div');
-    fakeCard.setAttribute('id', 'cardBig');
+    fakeCard.setAttribute('class', 'cardBig');
     fakeCard.setAttribute(`class`, `stack${i}`);
     cardArea.appendChild(fakeCard);
     }
@@ -106,7 +127,8 @@ const drawBackgroundCards = (num) => {
 
 const drawTopCard = () => {
     const cardDiv = document.createElement('div');
-    cardDiv.setAttribute('id', 'cardBig');
+    cardDiv.setAttribute('id', 'topCard');
+    cardDiv.setAttribute('class', 'cardBig');
     cardArea.appendChild(cardDiv);
     return cardDiv;
 }
@@ -134,7 +156,7 @@ const populateCard = (aCard) => {
     cardTitleDiv.textContent = theCard.cardName;
 }
 
-const drawCardStack = (aDeck) => {
+export const drawCardStack = (aDeck) => {
     console.log(aDeck);
     drawBackgroundCards(2);
     const theCard = getBookmarkedCard(aDeck);
@@ -165,6 +187,34 @@ const addForwardBackwardListeners = () => {
     addEventListeners('forwardButton', advanceBookmark);
     addEventListeners('backwardButton', previousBookmark);
 }
+
+const eraseTopCard = () => {
+    const oldCard = document.getElementById('topCard');
+    oldCard.remove();
+    drawTopCard();
+}
+
+const eraseDecks = () => {
+    const oldDecks = document.getElementsByClassName('deck');
+    Array.from(oldDecks).forEach(deckElement => {
+        deckElement.remove();
+    })
+}
+const createAndRenderDeck = () => {
+    controller.createDeck();
+    eraseDecks();
+    drawDecks(deckArray);
+}
+
+const createAndRenderCard = () => {
+    eraseTopCard();
+    const theCard = getBookmarkedCard(theDeck);
+    console.log(theCard);
+    populateCard(theCard);
+}
+
+addEventListeners('addDeckButton', createAndRenderDeck);
+addEventListeners('addCardButton', controller.createCard);
 
 
 drawCardStack(defaultDeck);

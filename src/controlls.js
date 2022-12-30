@@ -53,8 +53,9 @@ deckArray.push(defaultDeck);
       
     };
 
-    const createDeck = (name) => {
-      const thisDeck = deck(name);
+    export const createDeck = (name) => {
+        const theName = prompt('What is the name of teh deck?')
+      const thisDeck = deck(theName);
       table.push(thisDeck);
       console.log("the deck created is: " + thisDeck);
       console.log("its name is: " + thisDeck.deckName);
@@ -65,7 +66,8 @@ deckArray.push(defaultDeck);
         thisDeck.cardsArray.push(thisCard.cardName);
       };
 
-    const createCard = (name) => {
+    export const createCard = (name) => {
+        console.log('ive been clicked!')
       const newCard = card(name);
       newCard.cardDecks.forEach(deckName => {
         const thisDeck = getDeck(deckName);
