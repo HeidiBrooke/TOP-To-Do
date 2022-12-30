@@ -9,8 +9,10 @@ deckArray.push(all);
 export const table = deckArray;
 export const defaultDeck = deck('To-Do');
 export const defaultCard = card('Get Groceries');
+export const defaultCard2 = card('Mail Thank You Notes');
 all.cardsArray.push(defaultCard)
 defaultDeck.cardsArray.push(defaultCard.cardName);
+defaultDeck.cardsArray.push(defaultCard2.cardName);
 deckArray.push(defaultDeck);
 
     const viewAll = () => {

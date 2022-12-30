@@ -80,36 +80,47 @@ const drawAllCardsStack = (aDeck) => {
     cardTitleDiv.textContent = theCard.CardName;
 }
 
-const drawCardStack = (aDeck) => {
-    let fakeCard = document.createElement('div');
+const drawBackgroundCards = (num) => {
+    for(let i = 0; i<num; i++ ){
+    const fakeCard = document.createElement('div');
     fakeCard.setAttribute('id', 'cardBig');
-    fakeCard.setAttribute('class', 'stack');
+    fakeCard.setAttribute(`class`, `stack${i}`);
     cardArea.appendChild(fakeCard);
+    }
+}
 
-    fakeCard = document.createElement('div');
-    fakeCard.setAttribute('id', 'cardBig');
-    fakeCard.setAttribute('class', 'stack1');
-    cardArea.appendChild(fakeCard);
-
-    console.log('running drawCardStack');
+const drawTopCard = () => {
     const cardDiv = document.createElement('div');
     cardDiv.setAttribute('id', 'cardBig');
     cardArea.appendChild(cardDiv);
-    console.log(aDeck);
-    const thisBookmark = aDeck.bookmark;
-    console.log(aDeck.cardsArray[thisBookmark]);
-    const thisCardName = aDeck.cardsArray[thisBookmark];
-    const theCard = controller.getCard(thisCardName);
+    return cardDiv;
+}
 
-    
-
+const drawTitleDiv = () => {
     const cardTitleDiv = document.createElement('div');
     cardTitleDiv.setAttribute('id', 'cardTitle');
+    return cardTitleDiv;
+}
+
+const getBookmarkedCard = (aDeck) => {
+    const thisBookmark = aDeck.bookmark;
+    const thisCardName = aDeck.cardsArray[thisBookmark];
+    const theCard = controller.getCard(thisCardName);
+    return theCard;
+}
+
+const populateCard = (aCard) => {
+    const cardDiv = drawTopCard();
+    const theCard = aCard;
+    const cardTitleDiv = drawTitleDiv();
     cardDiv.appendChild(cardTitleDiv);
     cardTitleDiv.textContent = theCard.cardName;
+}
 
-    
-    
+const drawCardStack = (aDeck) => {
+    drawBackgroundCards(2);
+    const theCard = getBookmarkedCard(aDeck);
+    populateCard(theCard);    
 }
 
 drawCardStack(defaultDeck);

@@ -71,7 +71,7 @@ div {
 
 #cardArea{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     position: relative;
@@ -111,7 +111,7 @@ div {
 
 }
 
-.stack{
+.stack0{
     position: absolute;
     top: 4px;
     left: 125px;
@@ -125,4 +125,12 @@ div {
     left: 120px;
     z-index: -2;
     transform: rotate(2deg);
+}
+
+.stack2{
+    position: absolute;
+    top: 4px;
+    left: 120px;
+    z-index: -3;
+    transform: rotate(6deg);
 }
