@@ -88,7 +88,7 @@ deckArray.push(defaultDeck);
       return theCard;
     };
 
-    const getDeck = (name) => {
+    export const getDeck = (name) => {
       let theDeck;
       table.forEach((deckElement) => {
         console.log("the  deck name is: " + deckElement.deckName);

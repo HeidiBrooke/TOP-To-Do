@@ -81,7 +81,15 @@ backwardButton.setAttribute('id', 'backwardButton');
 cardArea.appendChild(backwardButton);
 backwardButton.textContent = '<';
 
-export const currentDeck = defaultDeck;
+let currentDeck = defaultDeck;
+
+const updateCurrentDeck = (e) => {
+    console.log('im UPDATInG!');
+    console.log(e.target);
+    const theDeckName = (e.target.textContent);
+    currentDeck = controller.getDeck(theDeckName);
+    populateCard();
+}
 
 const drawDecks = (arrayOfDecks) => {
     console.log('running drawDecks')
@@ -96,9 +104,14 @@ const drawDecks = (arrayOfDecks) => {
             deckTitleDiv.setAttribute('id', 'deckTitle');
             deckDiv.appendChild(deckTitleDiv);
             deckTitleDiv.textContent = aDeck.deckName;
+
+            deckDiv.addEventListener('click', updateCurrentDeck);
+            deckTitleDiv.addEventListener('click', updateCurrentDeck);
         }
-        
         });
+    
+
+    console.log(currentDeck);
 
 }
 
@@ -150,20 +163,24 @@ const getBookmarkedCard = (aDeck) => {
     return aCard;
 }
 
-const populateCard = (aCard) => {
-    const theCard = aCard;
-    console.log('puopulating with: ' + aCard);
+const populateCard = () => {
+    const theCard = getBookmarkedCard(currentDeck);
+    console.log('puopulating with: ' + theCard);
     const cardTitleDiv = document.getElementById('cardTitle');
-    cardTitleDiv.textContent = theCard.cardName;
+    if(theCard !== undefined){
+        cardTitleDiv.textContent = theCard.cardName;
+    }
+    else {
+        cardTitleDiv.textContent = '';
+    }
+    
 }
 
-export const drawCardStack = (aDeck) => {
+const drawCardStack = (aDeck) => {
     console.log(aDeck);
     drawBackgroundCards(2);
-    const cardDiv = drawTopCard();
-    const theCard = getBookmarkedCard(aDeck);
-    console.log(theCard);
-    populateCard(theCard);    
+    drawTopCard();
+    populateCard();    
 }
 
 const advanceBookmark = () => {
@@ -172,13 +189,12 @@ const advanceBookmark = () => {
     console.log(currentDeck.bookmark);
     const currentCard = getBookmarkedCard(currentDeck);
     console.log(currentCard)
-    populateCard(currentCard);
+    populateCard();
 }
 
 const previousBookmark = () => {
     currentDeck.bookmark--;
-    const currentCard = getBookmarkedCard(currentDeck);
-    populateCard(currentCard);
+    populateCard();
 }
 
 const addEventListeners = (elementName, aFunction) =>{
@@ -214,8 +230,7 @@ const createAndRenderDeck = () => {
 
 const createAndRenderCard = () => {
     controller.createCard();
-    // console.log(theCard);
-    // populateCard(theCard);
+    populateCard();
 }
 
 addEventListeners('addDeckButton', createAndRenderDeck);
