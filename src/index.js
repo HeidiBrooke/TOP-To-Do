@@ -152,6 +152,7 @@ const getBookmarkedCard = (aDeck) => {
 
 const populateCard = (aCard) => {
     const theCard = aCard;
+    console.log('puopulating with: ' + aCard);
     const cardTitleDiv = document.getElementById('cardTitle');
     cardTitleDiv.textContent = theCard.cardName;
 }
@@ -169,13 +170,14 @@ const advanceBookmark = () => {
     currentDeck.bookmark++;
     console.log(currentDeck);
     console.log(currentDeck.bookmark);
-    const currentCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+    const currentCard = getBookmarkedCard(currentDeck);
+    console.log(currentCard)
     populateCard(currentCard);
 }
 
 const previousBookmark = () => {
     currentDeck.bookmark--;
-    const currentCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+    const currentCard = getBookmarkedCard(currentDeck);
     populateCard(currentCard);
 }
 
@@ -211,14 +213,13 @@ const createAndRenderDeck = () => {
 
 
 const createAndRenderCard = () => {
-    eraseTopCard();
-    const theCard = getBookmarkedCard(theDeck);
-    console.log(theCard);
-    populateCard(theCard);
+    controller.createCard();
+    // console.log(theCard);
+    // populateCard(theCard);
 }
 
 addEventListeners('addDeckButton', createAndRenderDeck);
-addEventListeners('addCardButton', controller.createCard);
+addEventListeners('addCardButton', createAndRenderCard);
 
 
 drawCardStack(defaultDeck);

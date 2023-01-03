@@ -64,17 +64,10 @@ deckArray.push(defaultDeck);
     const addCardtoDeck = (thisCard, thisDeck) => {
         thisCard.cardDeck = thisDeck.deckName;
         thisDeck.cardsArray.push(thisCard.cardName);
+        console.log(thisDeck);
       };
 
-    export const createCard = (name) => {
-        console.log('ive been clicked!')
-      const newCard = card(name);
-      newCard.cardDecks.forEach(deckName => {
-        const thisDeck = getDeck(deckName);
-        addCardtoDeck(newCard, thisDeck )
-      })
-    //   all.cardsArray.push(newCard);
-    };
+    
 
     export const getCard = (name) => {
         console.log(name)
@@ -107,13 +100,31 @@ deckArray.push(defaultDeck);
         console.log("getting deck: " + theDeck);
       });
       if (theDeck === undefined) {
-        // const deckName = prompt(
-        //   "that deck does not exist, please enter another name:"
-        // );
-        // theDeck = getDeck(deckName);
+        const deckName = prompt(
+          "that deck does not exist, please enter another name:"
+        );
+        theDeck = getDeck(deckName);
       }
       console.log(theDeck);
       return theDeck;
+    };
+
+    export const createCard = (name) => {
+        const theName = prompt('What is the name of the card?')
+      const newCard = card(theName);
+      const nameOfDeck = prompt('what deck?');
+      newCard.cardDecks.push(nameOfDeck);
+      console.log(newCard.cardDecks);
+      newCard.cardDecks.forEach(deckName => {
+        if(deckName !== 'all'){
+        const thisDeck = getDeck(deckName);
+        console.log('adding hte fullowing card to the following deck '+ newCard.cardName + " " + thisDeck.deckName);
+        addCardtoDeck(newCard, thisDeck)
+        }
+        
+      })
+    all.cardsArray.push(newCard);
+    console.log(all);
     };
 
     
