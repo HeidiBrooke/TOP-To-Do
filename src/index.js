@@ -120,7 +120,7 @@ const drawBackgroundCards = (num) => {
     for(let i = 0; i<num; i++ ){
     const fakeCard = document.createElement('div');
     fakeCard.setAttribute('class', 'cardBig');
-    fakeCard.setAttribute(`class`, `stack${i}`);
+    fakeCard.classList.add(`stack${i}`);
     cardArea.appendChild(fakeCard);
     }
 }
@@ -130,6 +130,8 @@ const drawTopCard = () => {
     cardDiv.setAttribute('id', 'topCard');
     cardDiv.setAttribute('class', 'cardBig');
     cardArea.appendChild(cardDiv);
+    const cardTitleDiv = drawTitleDiv();
+    cardDiv.appendChild(cardTitleDiv);
     return cardDiv;
 }
 
@@ -149,16 +151,15 @@ const getBookmarkedCard = (aDeck) => {
 }
 
 const populateCard = (aCard) => {
-    const cardDiv = drawTopCard();
     const theCard = aCard;
-    const cardTitleDiv = drawTitleDiv();
-    cardDiv.appendChild(cardTitleDiv);
+    const cardTitleDiv = document.getElementById('cardTitle');
     cardTitleDiv.textContent = theCard.cardName;
 }
 
 export const drawCardStack = (aDeck) => {
     console.log(aDeck);
     drawBackgroundCards(2);
+    const cardDiv = drawTopCard();
     const theCard = getBookmarkedCard(aDeck);
     console.log(theCard);
     populateCard(theCard);    
@@ -168,12 +169,14 @@ const advanceBookmark = () => {
     currentDeck.bookmark++;
     console.log(currentDeck);
     console.log(currentDeck.bookmark);
-    drawCardStack(currentDeck);
+    const currentCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+    populateCard(currentCard);
 }
 
 const previousBookmark = () => {
     currentDeck.bookmark--;
-    drawCardStack(currentDeck);
+    const currentCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+    populateCard(currentCard);
 }
 
 const addEventListeners = (elementName, aFunction) =>{
@@ -206,6 +209,7 @@ const createAndRenderDeck = () => {
     drawDecks(deckArray);
 }
 
+
 const createAndRenderCard = () => {
     eraseTopCard();
     const theCard = getBookmarkedCard(theDeck);
@@ -220,5 +224,6 @@ addEventListeners('addCardButton', controller.createCard);
 drawCardStack(defaultDeck);
 drawDecks(deckArray);
 addForwardBackwardListeners();
+
 
 
