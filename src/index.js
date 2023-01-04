@@ -81,6 +81,20 @@ backwardButton.setAttribute('id', 'backwardButton');
 cardArea.appendChild(backwardButton);
 backwardButton.textContent = '<';
 
+const overLayHolder = document.createElement('div');
+overLayHolder.setAttribute('class', 'content');
+overLayHolder.classList.add('overLayHolder');
+content.appendChild(overLayHolder);
+
+const overlay = document.createElement('div');
+overlay.setAttribute('class', 'overlay');
+overLayHolder.appendChild(overlay);
+
+const newCardForm = document.createElement('div');
+newCardForm.setAttribute('class', 'cardBig');
+newCardForm.classList.add('editSize');
+overLayHolder.appendChild(newCardForm);
+
 let currentDeck = defaultDeck;
 let currentDeckDiv;
 
