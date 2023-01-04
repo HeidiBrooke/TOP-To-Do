@@ -82,13 +82,69 @@ cardArea.appendChild(backwardButton);
 backwardButton.textContent = '<';
 
 let currentDeck = defaultDeck;
+let currentDeckDiv;
+
+
+const updateCurrentDeckDiv = () => {
+    console.log('im updateing the current DIV')
+    const theCurrentDeckName = currentDeck.deckName;
+    console.log('theCurrentDeckName is + ' + theCurrentDeckName);
+    const deckDivs = document.getElementsByClassName(theCurrentDeckName);
+    currentDeckDiv = deckDivs[0];
+    // console.log(deckDivs);
+    // Array.from(deckDivs).forEach(deckDiv => {
+    //     console.log('the deckTitleis '+ deckTitleDiv);
+    //     if(deckDiv.firstElementChild.textContent === theCurrentDeckName){
+    //         currentDeckDiv = deckDiv;
+    //     }
+    // })
+}
+
+
+const styleCurrent = () => {
+    currentDeckDiv.classList.add('selectedDeck');
+    
+}
+
+const removeSelectedStyle = () => {
+    currentDeckDiv.classList.remove('selectedDeck');
+}
 
 const updateCurrentDeck = (e) => {
+    removeSelectedStyle();
     console.log('im UPDATInG!');
     console.log(e.target);
     const theDeckName = (e.target.textContent);
     currentDeck = controller.getDeck(theDeckName);
+    console.log('gonna update current deck div');
+    updateCurrentDeckDiv();
+    console.log('gonna style current decDiv ' + currentDeckDiv);
+    styleCurrent();
     populateCard();
+}
+const firstDrawDecks = (arrayOfDecks) => {
+    console.log('running drawDecks')
+    console.log(deckArray[1]);
+    arrayOfDecks.forEach(aDeck => {
+        if((arrayOfDecks.indexOf(aDeck)) !== 0){
+            const deckDiv = document.createElement('div');
+            deckDiv.setAttribute('class', 'deck');
+            deckArea.appendChild(deckDiv);
+
+            const deckTitleDiv = document.createElement('div');
+            deckTitleDiv.setAttribute('id', 'deckTitle');
+            deckDiv.appendChild(deckTitleDiv);
+            deckTitleDiv.textContent = aDeck.deckName;
+
+            deckDiv.classList.add(deckTitleDiv.textContent);
+
+            deckDiv.addEventListener('click', updateCurrentDeck);
+            deckTitleDiv.addEventListener('click', updateCurrentDeck);
+        }
+        });
+    updateCurrentDeckDiv();
+    console.log(currentDeckDiv);
+
 }
 
 const drawDecks = (arrayOfDecks) => {
@@ -105,13 +161,15 @@ const drawDecks = (arrayOfDecks) => {
             deckDiv.appendChild(deckTitleDiv);
             deckTitleDiv.textContent = aDeck.deckName;
 
+            deckDiv.classList.add(deckTitleDiv.textContent);
+
             deckDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('click', updateCurrentDeck);
         }
         });
-    
-
-    console.log(currentDeck);
+    updateCurrentDeckDiv();
+    styleCurrent();
+    console.log(currentDeckDiv);
 
 }
 
@@ -238,8 +296,9 @@ addEventListeners('addCardButton', createAndRenderCard);
 
 
 drawCardStack(defaultDeck);
-drawDecks(deckArray);
+firstDrawDecks(deckArray);
 addForwardBackwardListeners();
+styleCurrent();
 
 
 
