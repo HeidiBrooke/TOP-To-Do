@@ -54,14 +54,14 @@ deckArray.push(defaultDeck);
     };
 
     export const createDeck = (name) => {
-        const theName = prompt('What is the name of teh deck?')
-      const thisDeck = deck(theName);
+        // const theName = prompt('What is the name of teh deck?')
+      const thisDeck = deck(name);
       table.push(thisDeck);
-      console.log("the deck created is: " + thisDeck);
-      console.log("its name is: " + thisDeck.deckName);
+      // console.log("the deck created is: " + thisDeck);
+      // console.log("its name is: " + thisDeck.deckName);
     };
 
-    const addCardtoDeck = (thisCard, thisDeck) => {
+    export const addCardtoDeck = (thisCard, thisDeck) => {
         thisCard.cardDeck = thisDeck.deckName;
         thisDeck.cardsArray.push(thisCard.cardName);
         console.log(thisDeck);
@@ -110,19 +110,19 @@ deckArray.push(defaultDeck);
     };
 
     export const createCard = (name) => {
-        const theName = prompt('What is the name of the card?')
-      const newCard = card(theName);
-      const nameOfDeck = prompt('what deck?');
-      newCard.cardDecks.push(nameOfDeck);
-      console.log(newCard.cardDecks);
-      newCard.cardDecks.forEach(deckName => {
-        if(deckName !== 'all'){
-        const thisDeck = getDeck(deckName);
-        console.log('adding hte fullowing card to the following deck '+ newCard.cardName + " " + thisDeck.deckName);
-        addCardtoDeck(newCard, thisDeck)
-        }
+        // const theName = prompt('What is the name of the card?')
+      const newCard = card(name);
+      // const nameOfDeck = prompt('what deck?');
+      // newCard.cardDecks.push(nameOfDeck);
+      // console.log(newCard.cardDecks);
+      // newCard.cardDecks.forEach(deckName => {
+      //   if(deckName !== 'all'){
+      //   const thisDeck = getDeck(deckName);
+      //   console.log('adding hte fullowing card to the following deck '+ newCard.cardName + " " + thisDeck.deckName);
+      //   addCardtoDeck(newCard, thisDeck)
+      //   }
         
-      })
+      // })
     all.cardsArray.push(newCard);
     console.log(all);
     };

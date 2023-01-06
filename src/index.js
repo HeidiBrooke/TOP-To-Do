@@ -130,6 +130,16 @@ cardTitleInput.setAttribute('type', 'text');
 cardTitleInput.setAttribute('name', 'card-title');
 cardTitleInput.setAttribute('placeholder', 'Title');
 
+const cardDeck = document.createElement('select');
+cardDeck.setAttribute('class', 'cardDeck');
+cardDeck.setAttribute('multiple', 'multiple');
+cardDeck.classList.add('input');
+cardForm.appendChild(cardDeck);
+cardDeck.setAttribute('id', 'cardDeck');
+// cardDeck.setAttribute('type', '');
+cardDeck.setAttribute('name', 'cardDeck');
+// cardDeck.setAttribute('placeholder', 'Deck');
+
 const step = document.createElement('input');
 step.setAttribute('class', 'step');
 step.classList.add('input');
@@ -317,17 +327,28 @@ const drawCardStack = (aDeck) => {
 }
 
 const advanceBookmark = () => {
+    console.log('running advance bookmark')
     currentDeck.bookmark++;
-    console.log(currentDeck);
-    console.log(currentDeck.bookmark);
-    const currentCard = getBookmarkedCard(currentDeck);
-    console.log(currentCard)
-    populateCard();
+    if(currentDeck.cardsArray[currentDeck.bookmark] !== undefined){
+        populateCard();
+    }
+    else{
+        currentDeck.bookmark--;
+        populateCard();
+    }
 }
 
 const previousBookmark = () => {
+    console.log('running previous bookmark')
     currentDeck.bookmark--;
-    populateCard();
+    if(currentDeck.cardsArray[currentDeck.bookmark] !== undefined){
+        populateCard();
+    }
+    else{
+        currentDeck.bookmark++;
+        populateCard();
+    }
+    
 }
 
 const addEventListeners = (elementName, aFunction) =>{
@@ -354,19 +375,49 @@ const eraseDecks = () => {
         deckElement.remove();
     })
 }
-const createAndRenderDeck = () => {
-    controller.createDeck();
+const createAndRenderDeck = (name) => {
+    controller.createDeck(name);
     eraseDecks();
     drawDecks(deckArray);
 }
 
 
-const createAndRenderCard = () => {
-    controller.createCard();
+const createAndRenderCard = (name) => {
+    controller.createCard(name);
     populateCard();
 }
 
+let formType = 'deck';
 
+const resetDeckOptions = () => {
+    const deckSelector = document.getElementById('cardDeck');
+    Array.from(deckSelector).forEach(deckElement => {
+        deckElement.remove();
+    })
+}
+const setDeckOptions = () => {
+    resetDeckOptions();
+    deckArray.forEach(deckElement => {
+        const deckOption = document.createElement('option');
+        cardDeck.appendChild(deckOption);
+        deckOption.value = deckElement.deckName;
+        deckOption.textContent = deckElement.deckName;
+    })
+}
+
+const resetFormDeck = () => {
+    const aDiv = document.getElementById('card-title');
+    aDiv.value = '';
+}
+
+const resetFormCard = () => {
+    let aDiv = document.getElementById('card-title');
+    aDiv.value = '';
+    aDiv = document.getElementById('step');
+    aDiv.value = '';
+    aDiv.cardDate = document.getElementById('date').value;
+    aDiv.value = '';
+}
 
 const showForm = () => {
     console.log('showing form!');
@@ -382,32 +433,84 @@ const hideForm = () => {
     aDiv.style.visibility = 'hidden';
     aDiv = document.getElementById('date');
     aDiv.style.visibility = 'hidden';
+    aDiv = document.getElementById('cardDeck');
+    aDiv.style.visibility = 'hidden';
 }
 
 const showDeckForm = () => {
     showForm();
+    formType = 'deck';
     let aDiv = document.getElementById('step');
     aDiv.style.visibility = 'hidden';
     aDiv = document.getElementById('date');
+    aDiv.style.visibility = 'hidden';
+    aDiv = document.getElementById('cardDeck');
     aDiv.style.visibility = 'hidden';
     aDiv = document.getElementById('card-title');
     aDiv.style.gridRow = '3/4';
+    
 }
 
 const showCardForm = () => {
+    setDeckOptions();
     showForm();
+    formType = 'card';
     let aDiv = document.getElementById('step');
     aDiv.style.visibility = 'visible';
     aDiv = document.getElementById('date');
     aDiv.style.visibility = 'visible';
+    aDiv = document.getElementById('cardDeck');
+    aDiv.style.visibility = 'visible';
     aDiv = document.getElementById('card-title');
     aDiv.style.gridRow = '1/2';
-       
 }
+
+const saveDeck = () => {
+    const aDiv = document.getElementById('card-title').value;
+    createAndRenderDeck(aDiv);
+    resetFormDeck();
+    hideForm();
+}
+
+const saveCard = () => {
+    let aDiv = document.getElementById('card-title').value;
+    createAndRenderCard(aDiv);
+    aDiv = controller.getCard(aDiv);
+    aDiv.cardSteps.push(document.getElementById('step').value);
+    aDiv.cardDate = document.getElementById('date').value;
+    const deckList = document.getElementsByTagName('option');
+    Array.from(deckList).forEach(option => {
+        if(option.value !== ''){
+            aDiv.cardDecks.push(option.value);
+        }
+    })
+    aDiv.cardDecks.forEach(deckNameString => {
+        const aDeck = controller.getDeck(deckNameString)
+        controller.addCardtoDeck(aDiv, aDeck);
+    })
+    resetFormCard();
+    hideForm();
+}
+
+
+
+const saveForm = () => {
+    console.log('save type is: '+ formType);
+    if(formType ==='deck'){
+        console.log('saving deck!')
+        saveDeck();
+    }
+    else if(formType === 'card'){
+        console.log('saving card!')
+        saveCard();
+    }
+}
+
 
 addEventListeners('addDeckButton', showDeckForm);
 addEventListeners('addCardButton', showCardForm);
 addEventListeners('cancel', hideForm);
+addEventListeners('check', saveForm);
 
 
 drawCardStack(defaultDeck);
