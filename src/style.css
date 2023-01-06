@@ -192,8 +192,8 @@ div {
 }
 
 .editSize{
-    position: absolute;
-    top: 180px;
+    /* position: absolute;
+    top: 180px; */
     width: 300px;
     height: 450px;
     z-index: 3;
@@ -206,15 +206,81 @@ div {
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 100vh;  
+    height: 100vh; 
+    
 }
 .overlay{
+    display: grid;
     position: absolute;
     background-color: rgb(37, 107, 107);
     opacity: 60%;
     height: 100vh;
     width: 100vw;
     z-index: 2;
+    padding: 20px; 
 }
 
+.formDiv{
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px;
+    gap: 20px;
+    width: 300px;
+    height: 600px;
+    z-index: 3;
+}
+
+.submitButtonsDiv{
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    height: 44px;
+}
+
+.cardForm{
+    display: grid;
+    gap: 16px;
+    width:300px;
+    height: 410px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    padding: 20px;
+}
+
+.input, .check{
+    padding: 8px;
+    grid-column: 1/5;
+    border: none;
+    outline: none;
+    border-radius: 16px;
+    background-color: rgb(242, 242, 242);
+    color: rgb(80, 163, 182);
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    text-align: center;
+}
+
+.input:hover{
+    box-shadow: rgb(102, 173, 241) 0 0 3px 2px;
+}
+
+#card-title{
+   /* grid-row: 3/4; */
+}
+
+#date{
+    grid-row: 7/8;
+}
+
+.check{
+    background-color: white;
+    width: 50px;
+    z-index: 3;
+    text-align: center;
+    vertical-align: center;
+}
+
+.check:hover{
+    font-size: 24px;
+}
 

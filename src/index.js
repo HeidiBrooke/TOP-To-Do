@@ -83,6 +83,7 @@ backwardButton.textContent = '<';
 
 const overLayHolder = document.createElement('div');
 overLayHolder.setAttribute('class', 'content');
+overLayHolder.setAttribute('id', 'overLayHolder');
 overLayHolder.classList.add('overLayHolder');
 content.appendChild(overLayHolder);
 
@@ -90,10 +91,64 @@ const overlay = document.createElement('div');
 overlay.setAttribute('class', 'overlay');
 overLayHolder.appendChild(overlay);
 
+const formDiv = document.createElement('div');
+formDiv.setAttribute('class', 'formDiv');
+overLayHolder.appendChild(formDiv);
+
 const newCardForm = document.createElement('div');
 newCardForm.setAttribute('class', 'cardBig');
 newCardForm.classList.add('editSize');
-overLayHolder.appendChild(newCardForm);
+newCardForm.setAttribute('id', 'newCardForm');
+formDiv.appendChild(newCardForm);
+
+const submitButtonsDiv = document.createElement('div');
+submitButtonsDiv.setAttribute('class', 'submitButtonsDiv');
+formDiv.appendChild(submitButtonsDiv);
+
+const cancel = document.createElement('div');
+cancel.setAttribute('class', 'check');
+cancel.setAttribute('id', 'cancel');
+submitButtonsDiv.appendChild(cancel);
+cancel.textContent = '✖';
+
+const check = document.createElement('div');
+check.setAttribute('class', 'check');
+submitButtonsDiv.appendChild(check);
+check.setAttribute('id', 'check');
+check.textContent = '✓';
+
+const cardForm = document.createElement('form');
+cardForm.setAttribute('class', 'cardForm');
+newCardForm.appendChild(cardForm);
+
+const cardTitleInput = document.createElement('input');
+cardTitleInput.setAttribute('class', 'cardTitleInput');
+cardTitleInput.classList.add('input');
+cardForm.appendChild(cardTitleInput);
+cardTitleInput.setAttribute('id', 'card-title');
+cardTitleInput.setAttribute('type', 'text');
+cardTitleInput.setAttribute('name', 'card-title');
+cardTitleInput.setAttribute('placeholder', 'Title');
+
+const step = document.createElement('input');
+step.setAttribute('class', 'step');
+step.classList.add('input');
+cardForm.appendChild(step);
+step.setAttribute('id', 'step');
+step.setAttribute('type', 'text');
+step.setAttribute('name', 'step');
+step.setAttribute('placeholder', '+ step');
+
+const date = document.createElement('input');
+date.setAttribute('class', 'date');
+date.classList.add('input');
+cardForm.appendChild(date);
+// const theDate = new Date();
+// console.log('the date is' + theDate);
+date.setAttribute('id', 'date');
+date.setAttribute('type', 'date');
+date.setAttribute('name', 'date');
+date.setAttribute('placeholder', ``);
 
 let currentDeck = defaultDeck;
 let currentDeckDiv;
@@ -177,8 +232,14 @@ const drawDecks = (arrayOfDecks) => {
 
             deckDiv.classList.add(deckTitleDiv.textContent);
 
+            // const editDeck = document.createElement('div');
+            // editDeck.setAttribute('id', 'editDeck')
+            // deckDiv.appendChild(editDeck)
+            // editDeck.textContent = 'Edit';
+
             deckDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('click', updateCurrentDeck);
+            // editDeck.addEventListener('click', showForm);
         }
         });
     updateCurrentDeckDiv();
@@ -305,8 +366,48 @@ const createAndRenderCard = () => {
     populateCard();
 }
 
-addEventListeners('addDeckButton', createAndRenderDeck);
-addEventListeners('addCardButton', createAndRenderCard);
+
+
+const showForm = () => {
+    console.log('showing form!');
+    const form = document.getElementById('overLayHolder');
+    form.style.visibility = 'visible';
+}
+
+const hideForm = () => {
+    console.log('hiding form!');
+    const form = document.getElementById('overLayHolder');
+    form.style.visibility = 'hidden';
+    let aDiv = document.getElementById('step');
+    aDiv.style.visibility = 'hidden';
+    aDiv = document.getElementById('date');
+    aDiv.style.visibility = 'hidden';
+}
+
+const showDeckForm = () => {
+    showForm();
+    let aDiv = document.getElementById('step');
+    aDiv.style.visibility = 'hidden';
+    aDiv = document.getElementById('date');
+    aDiv.style.visibility = 'hidden';
+    aDiv = document.getElementById('card-title');
+    aDiv.style.gridRow = '3/4';
+}
+
+const showCardForm = () => {
+    showForm();
+    let aDiv = document.getElementById('step');
+    aDiv.style.visibility = 'visible';
+    aDiv = document.getElementById('date');
+    aDiv.style.visibility = 'visible';
+    aDiv = document.getElementById('card-title');
+    aDiv.style.gridRow = '1/2';
+       
+}
+
+addEventListeners('addDeckButton', showDeckForm);
+addEventListeners('addCardButton', showCardForm);
+addEventListeners('cancel', hideForm);
 
 
 drawCardStack(defaultDeck);
