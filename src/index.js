@@ -281,10 +281,25 @@ const drawBackgroundCards = (num) => {
     }
 }
 
+const saveTitle = (e) => {
+    console.log('saving change to title');
+    const text = e.target.textContent;
+    console.log(text);
+    console.log(currentDeck.bookmark);
+    console.log(currentDeck.cardsArray[currentDeck.bookmark]);
+    // currentDeck.cardsArray[currentDeck.bookmark] = text;
+    const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+    console.log(theCard);
+    theCard.cardName = text;
+    currentDeck.cardsArray[currentDeck.bookmark] = text;
+    console.log(theCard.cardName);
+}
+
 const drawTitleDiv = () => {
     const cardTitleDiv = document.createElement('div');
     cardTitleDiv.setAttribute('id', 'cardTitle');
     cardTitleDiv.setAttribute('contenteditable', 'true');
+    cardTitleDiv.addEventListener('input', saveTitle);
     return cardTitleDiv;
 }
 
