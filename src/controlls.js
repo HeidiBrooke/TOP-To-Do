@@ -71,12 +71,19 @@ deckArray.push(defaultDeck);
 
     export const getCard = (name) => {
         console.log(name)
-      let theCard;
+      let thisCard;
+      console.log(thisCard);
+      console.log(all.length);
+      console.log(all.cardsArray);
       all.cardsArray.forEach((cardElement) => {
         console.log(cardElement.cardName);
         console.log(name);
         if (cardElement.cardName === name) {
-          theCard = cardElement;
+          console.log(`${cardElement.cardName} === ${name}`);
+          console.log(thisCard);
+          console.log(cardElement);
+          thisCard = cardElement;
+          console.log(thisCard);
         }
       });
     //   if (theCard === undefined) {
@@ -85,7 +92,8 @@ deckArray.push(defaultDeck);
     //     // );
     //     // theCard = getCard(cardName);
     //   }
-      return theCard;
+      console.log(thisCard)
+      return thisCard;
     };
 
     export const getDeck = (name) => {
@@ -124,7 +132,9 @@ deckArray.push(defaultDeck);
         
       // })
     all.cardsArray.push(newCard);
-    console.log(all);
+    console.log(`pusing ${newCard} to ${all}`);
+    return newCard;
+    
     };
 
     
