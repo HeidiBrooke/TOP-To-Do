@@ -56,7 +56,7 @@ div {
 
 .deckArea{
     display: flex;
-    gap: 4px;
+    gap: 7px;
 }
 
 #table{
@@ -98,7 +98,8 @@ div {
     height: 90px;
     border-radius: 4px;
     background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.16) 0 7px 9px -7px;
+    /* box-shadow: rgba(0, 0, 0, 0.16) 0 7px 9px -7px;
+    box-shadow: rgba(53, 82, 94, 0.3) 1px 7px 7px 1px; */
     justify-items: center;
     align-items: center;
 }
@@ -112,7 +113,7 @@ div {
     gap: 4px;
 }
 
-#deckTitle, #cardTitle{
+#deckTitle, #cardTitle, #cardDate, #cardSteps{
     margin-top: 8px;
     font-family: 'Raleway', sans-serif;
     font-size: 14px;
@@ -122,13 +123,23 @@ div {
 }
 
 .selectedDeck {
-    box-shadow: rgb(102, 173, 241) 0 0 3px 2px;
+    box-shadow: rgb(102, 220, 241) 0 0 3px 2px;
+    /* box-shadow: rgba(53, 82, 94, 0.3) 1px 9px 9px 1px; */
 }
 
 #addCardButton, #addDeckButton{
     font-size: 48px;
+    cursor: pointer;
 }
 
+#addCardButton:hover, #addDeckButton:hover, .nextButton:hover{
+    /* text-shadow:  0 0 3px 2px, rgb(102, 173, 241); */
+    text-shadow: -1px 1px 2px rgb(102, 220, 241),
+				  1px 1px 2px rgb(102, 220, 241),
+				  1px -1px 0 rgb(102, 220, 241),
+				  -1px -1px 0 rgb(102, 220, 241);
+    
+}
 .nextButton{
     justify-self: right;
     color: white;
@@ -136,6 +147,7 @@ div {
     font-family: 'Raleway', sans-serif;
     font-size: 72px;
     border: none;
+    cursor: pointer;
 }
 
 #forwardButton{
@@ -159,11 +171,15 @@ div {
     height: 360px;
     border-radius: 16px;
     background-color: white;
-    box-shadow: rgba(53, 82, 94, 0.3) 0 0px 3px 3px;
+    box-shadow: rgba(53, 82, 94, 0.3) 1px 9px 9px 1px;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     z-index: 1;
 
+}
+
+#topCard{
+    flex-direction: column;
 }
 
 .stack0{
@@ -262,6 +278,7 @@ div {
 
 .input:hover{
     box-shadow: rgb(102, 173, 241) 0 0 3px 2px;
+    box-shadow: rgb(102, 220, 241) 0 0 3px 2px;
 }
 
 #card-title{

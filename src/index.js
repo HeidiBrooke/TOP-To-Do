@@ -281,6 +281,24 @@ const drawBackgroundCards = (num) => {
     }
 }
 
+const drawTitleDiv = () => {
+    const cardTitleDiv = document.createElement('div');
+    cardTitleDiv.setAttribute('id', 'cardTitle');
+    return cardTitleDiv;
+}
+
+const drawDateDiv = () => {
+    const cardDateDiv = document.createElement('div');
+    cardDateDiv.setAttribute('id', 'cardDate');
+    return cardDateDiv;
+}
+
+const drawStepsDiv = () => {
+    const cardStepsDiv = document.createElement('ul');
+    cardStepsDiv.setAttribute('id', 'cardSteps');
+    return cardStepsDiv;
+}
+
 const drawTopCard = () => {
     const cardDiv = document.createElement('div');
     cardDiv.setAttribute('id', 'topCard');
@@ -288,13 +306,11 @@ const drawTopCard = () => {
     cardArea.appendChild(cardDiv);
     const cardTitleDiv = drawTitleDiv();
     cardDiv.appendChild(cardTitleDiv);
+    const cardDateDiv = drawDateDiv();
+    cardDiv.appendChild(cardDateDiv);
+    const cardStepsDiv = drawStepsDiv();
+    cardDiv.appendChild(cardStepsDiv);
     return cardDiv;
-}
-
-const drawTitleDiv = () => {
-    const cardTitleDiv = document.createElement('div');
-    cardTitleDiv.setAttribute('id', 'cardTitle');
-    return cardTitleDiv;
 }
 
 const getBookmarkedCard = (aDeck) => {
@@ -315,6 +331,30 @@ const populateCard = () => {
     }
     else {
         cardTitleDiv.textContent = '';
+    }
+    const cardDateDiv = document.getElementById('cardDate');
+    if(theCard !== undefined){
+        cardDateDiv.textContent = `Due date: ${theCard.cardDate}`;
+    }
+    else {
+        cardDateDiv.textContent = '';
+    }
+
+    const cardStepsDiv = document.getElementById('cardSteps');
+    console.log(cardStepsDiv);
+    console.log(typeof cardStepsDiv);
+    if(theCard !== undefined){
+        theCard.cardSteps.forEach(stepString => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${stepString}`
+            console.log(cardStepsDiv);
+            console.log(typeof cardStepsDiv);
+            cardStepsDiv.appendChild(listItem);
+        })
+        // cardStepsDiv.textContent = `${theCard.cardSteps}`;
+    }
+    else {
+        cardStepsDiv.textContent = '';
     }
     
 }
@@ -478,11 +518,10 @@ const saveCard = () => {
     aDiv = controller.getCard(aDiv);
     aDiv.cardSteps.push(document.getElementById('step').value);
     aDiv.cardDate = document.getElementById('date').value;
-    const deckList = document.getElementsByTagName('option');
-    Array.from(deckList).forEach(option => {
-        if(option.value !== ''){
-            aDiv.cardDecks.push(option.value);
-        }
+    const deckList = document.getElementById('cardDeck');
+    const collection = deckList.selectedOptions;
+    Array.from(collection).forEach(option => {
+            aDiv.cardDecks.push(option.value);  
     })
     aDiv.cardDecks.forEach(deckNameString => {
         const aDeck = controller.getDeck(deckNameString)
