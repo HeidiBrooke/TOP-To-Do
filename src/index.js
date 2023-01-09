@@ -284,6 +284,7 @@ const drawBackgroundCards = (num) => {
 const drawTitleDiv = () => {
     const cardTitleDiv = document.createElement('div');
     cardTitleDiv.setAttribute('id', 'cardTitle');
+    cardTitleDiv.setAttribute('contenteditable', 'true');
     return cardTitleDiv;
 }
 
@@ -293,9 +294,19 @@ const drawDateDiv = () => {
     return cardDateDiv;
 }
 
+const saveStep = (e) => {
+    console.log('saving change to text');
+    const text = e.target.textContent;
+    console.log(text);
+    const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+    theCard.cardSteps[0] = text;
+}
+
 const drawStepsDiv = () => {
     const cardStepsDiv = document.createElement('ul');
     cardStepsDiv.setAttribute('id', 'cardSteps');
+    cardStepsDiv.setAttribute('contenteditable', 'true');
+    cardStepsDiv.addEventListener('input', saveStep);
     return cardStepsDiv;
 }
 
@@ -322,7 +333,17 @@ const getBookmarkedCard = (aDeck) => {
     return aCard;
 }
 
+const eraseSteps = () => {
+    const stepsDiv = document.getElementById('cardSteps');
+    const steps = stepsDiv.children;
+    Array.from(steps).forEach(stepElement => {
+        stepElement.remove();
+    })
+    
+}
+
 const populateCard = () => {
+    eraseSteps();
     const theCard = getBookmarkedCard(currentDeck);
     console.log('puopulating with: ' + theCard);
     const cardTitleDiv = document.getElementById('cardTitle');
