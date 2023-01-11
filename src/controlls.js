@@ -99,15 +99,17 @@ deckArray.push(defaultDeck);
     export const getDeck = (name) => {
       console.log('GETTING DECK');
       let theDeck;
-      table.forEach((deckElement) => {
+      console.log(`the deck array is ${deckArray}`);
+      deckArray.forEach(deckElement => {
         console.log("the  deck name is: " + deckElement.deckName);
         if (deckElement.deckName === name) {
           console.log("it matched!");
           console.log(deckElement.deckName, name);
           theDeck = deckElement;
         }
-        console.log("getting deck: " + theDeck);
+        
       });
+      console.log("getting deck: " + theDeck.deckName);
       // if (theDeck === undefined) {
       //   const deckName = prompt(
       //     "that deck does not exist, please enter another name:"
@@ -133,7 +135,7 @@ deckArray.push(defaultDeck);
         
       // })
     all.cardsArray.push(newCard);
-    console.log(`pusing ${newCard} to ${all}`);
+    console.log(all.cardsArray);
     return newCard;
     
     };
@@ -165,10 +167,12 @@ deckArray.push(defaultDeck);
       console.log('DELETEING DECK IN CONTROLLS')
       console.log(`deck name is ${aDeckName}`)
       const deckObj = getDeck(aDeckName);
+      console.log(`go the deck object called ${deckObj.deckName}`);
       const index = deckArray.indexOf(deckObj);
       if (index > -1) {
         deckArray.splice(index, 1);
       }
+      console.log(`DECK ARRAY IS ${deckArray}`);
       return deckArray;
     };
 

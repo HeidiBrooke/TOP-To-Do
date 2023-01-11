@@ -95,8 +95,9 @@ div {
 
 .deck, .blankDeck{
     /* pointer-events: none; */
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(5, 1fr);
     width: 60px;
     height: 90px;
     border-radius: 4px;
@@ -109,7 +110,7 @@ div {
 }
 
 .blankDeck{
-    background-color: rgb(31, 94, 94);
+    background-color:  rgb(46, 99, 111);
 }
 
 .menu{
@@ -129,6 +130,11 @@ div {
     text-transform: uppercase;
     text-align: center;
     text-justify: center;
+}
+
+#deckTitle{
+    grid-column: 1/4;
+    grid-row: 1/5;
 }
 
 .selectedDeck {
@@ -338,6 +344,8 @@ div {
 }
 
 #deckDelete{
+    grid-column: 1/2;
+    grid-row: 5/6;
     width: 8px;
     height: 8px;
     border-radius: 50%;

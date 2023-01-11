@@ -225,7 +225,7 @@ const updateCurrentDeckByName = (name) => {
     populateCard();
 }
 
-const drawBlankDecks = () => {
+const drawBlankDeck = () => {
     const blankDeckDiv = document.createElement('div');
     blankDeckDiv.setAttribute('class', 'blankDeck');
     deckArea.appendChild(blankDeckDiv);
@@ -235,7 +235,11 @@ const drawBlankDecks = () => {
     littlePlus.textContent = '+';
     littlePlus.addEventListener('click', showDeckForm)
     blankDeckDiv.appendChild(littlePlus);
+}
 
+const eraseBlankDeck = () => {
+    const blankDeckDiv = document.getElementsByClassName('blankDeck');
+    blankDeckDiv[0].remove();
 }
 
 const firstDrawDecks = (arrayOfDecks) => {
@@ -254,14 +258,15 @@ const firstDrawDecks = (arrayOfDecks) => {
 
             deckDiv.classList.add(deckTitleDiv.textContent);
 
-            // const deckDeleteButton = drawDeckDeleteButton();
-            // deckDiv.appendChild(deckDeleteButton);
+            const deckDeleteButton = drawDeckDeleteButton();
+            deckDiv.appendChild(deckDeleteButton);
 
             deckDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('input', saveDeckTitle);
         }
         });
+        drawBlankDeck();
     updateCurrentDeckDiv();
     // console.log(currentDeckDiv);
 
@@ -275,7 +280,7 @@ const saveDeckTitle = (e) => {
 }
 
 const drawDecks = (arrayOfDecks) => {
-    // console.log('running drawDecks')
+    console.log('running drawDecks')
     // console.log(deckArray[1]);
     arrayOfDecks.forEach(aDeck => {
         if((arrayOfDecks.indexOf(aDeck)) !== 0){
@@ -291,8 +296,8 @@ const drawDecks = (arrayOfDecks) => {
 
             deckDiv.classList.add(deckTitleDiv.textContent);
 
-            // const deckDeleteButton = drawDeckDeleteButton();
-            // deckDiv.appendChild(deckDeleteButton);
+            const deckDeleteButton = drawDeckDeleteButton();
+            deckDiv.appendChild(deckDeleteButton);
 
             // const editDeck = document.createElement('div');
             // editDeck.setAttribute('id', 'editDeck')
@@ -300,11 +305,13 @@ const drawDecks = (arrayOfDecks) => {
             // editDeck.textContent = 'Edit';
 
             deckDiv.addEventListener('click', updateCurrentDeck);
-            deckTitleDiv.addEventListener('click', updateCurrentDeck);
+            // deckTitleDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('input', saveDeckTitle);
             // editDeck.addEventListener('click', showForm);
         }
         });
+    eraseBlankDeck();
+    drawBlankDeck();
     updateCurrentDeckDiv();
     styleCurrent();
     // console.log(currentDeckDiv);
@@ -335,7 +342,7 @@ const drawBackgroundCards = (num) => {
 }
 
 const saveTitle = (e) => {
-    e.stopImmediatePropagation();
+    
 
     // console.log('saving change to title');
     const text = e.target.textContent;
@@ -387,12 +394,26 @@ const deleteAndEraseCard = () => {
 }
 
 const deleteAndEraseDeck = (e) => {
+    e.stopPropagation();
     const deleteDiv = e.target;
     const deckDiv = deleteDiv.parentElement;
-    const deckTitleDiv = deckDiv.firstChild();
+    const deckTitleDiv = deckDiv.firstChild;
     const deckTitle = deckTitleDiv.textContent;
+    const currentDeckIndex = deckArray.indexOf(currentDeck);
     controller.deleteDeck(deckTitle);
-    drawDecks();
+    if(currentDeck.deckName === deckTitle){
+        if(deckArray.length < 2){
+            currentDeck = all;
+        }
+        else {
+            currentDeck = deckArray[currentDeckIndex];
+            eraseDecks();
+            drawDecks(deckArray);
+        }
+        eraseDecks();
+        drawDecks(deckArray);
+    }
+    console.log(`AFTER DELETE currentDeck is ${currentDeck.deckName}`);
 }
 
 const drawDeleteButton = () => {
@@ -406,10 +427,9 @@ const drawDeleteButton = () => {
 const drawDeckDeleteButton = () => {
     const deckDeleteButton = document.createElement('div');
     deckDeleteButton.setAttribute('id', 'deckDelete');
-    deckDeleteButton.addEventListener('click', deleteAndEraseDeck);
+    deckDeleteButton.addEventListener('click', deleteAndEraseDeck, true);
     deckDeleteButton.textContent = '-'
     return deckDeleteButton;
-
 }
 
 const drawTopCard = () => {
@@ -430,7 +450,14 @@ const drawTopCard = () => {
 
 const getBookmarkedCard = (aDeck) => {
     const thisBookmark = aDeck.bookmark;
-    const thisCardName = aDeck.cardsArray[thisBookmark];
+    let thisCardName = aDeck.cardsArray[thisBookmark];
+    const type = typeof(thisCardName);
+    if(type !== "string"){
+        if(thisCardName !== undefined){
+            thisCardName = thisCardName.cardName;
+        }
+  
+    }
     console.log(`bookmrked crd is ${thisCardName}`);
     const aCard = controller.getCard(thisCardName);
 
@@ -451,6 +478,7 @@ const populateCard = () => {
     eraseSteps();
     console.log(currentDeck);
     console.log(currentDeck.bookmark);
+    console.log(currentDeck.cardsArray[1]);
     const theCard = getBookmarkedCard(currentDeck);
     console.log('puopulating with: ' + theCard);
     const cardTitleDiv = document.getElementById('cardTitle');
@@ -516,11 +544,14 @@ const advanceBookmark = () => {
 const previousBookmark = () => {
     console.log('running previous bookmark')
     currentDeck.bookmark--;
+    console.log(currentDeck.bookmark);
     if(currentDeck.cardsArray[currentDeck.bookmark] !== undefined){
+        console.log('bookmark was defined')
         populateCard();
     }
     else{
         currentDeck.bookmark++;
+        console.log(currentDeck.bookmark);
         populateCard();
     }
     
