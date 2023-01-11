@@ -165,9 +165,10 @@ let currentDeckDiv;
 
 
 const updateCurrentDeckDiv = () => {
-    console.log('im updateing the current DIV')
+    if(currentDeck !== undefined){
+        // console.log('im updateing the current DIV')
     const theCurrentDeckName = currentDeck.deckName;
-    console.log('theCurrentDeckName is + ' + theCurrentDeckName);
+    // console.log('theCurrentDeckName is + ' + theCurrentDeckName);
     const deckDivs = document.getElementsByClassName('deck');
     Array.from(deckDivs).forEach(deckDiv => {
         const titleDiv = deckDiv.children[0];
@@ -186,11 +187,13 @@ const updateCurrentDeckDiv = () => {
     //         currentDeckDiv = deckDiv;
     //     }
     // })
+    }
+    
 }
 
 
 const styleCurrent = () => {
-    console.log(currentDeckDiv);
+    // console.log(currentDeckDiv);
     currentDeckDiv.classList.add('selectedDeck');
     
 }
@@ -201,19 +204,32 @@ const removeSelectedStyle = () => {
 
 const updateCurrentDeck = (e) => {
     removeSelectedStyle();
-    console.log('im UPDATInG!');
+    // console.log('im UPDATInG!');
     console.log(e.target);
     const theDeckName = (e.target.textContent);
     currentDeck = controller.getDeck(theDeckName);
-    console.log('gonna update current deck div');
+    // console.log('gonna update current deck div');
     updateCurrentDeckDiv();
-    console.log('gonna style current decDiv ' + currentDeckDiv);
+    // console.log('gonna style current decDiv ' + currentDeckDiv);
+    styleCurrent();
+    populateCard();
+}
+
+const updateCurrentDeckByName = (name) => {
+    removeSelectedStyle();
+    // console.log('im UPDATInG!');
+    
+    const theDeckName = name;
+    currentDeck = controller.getDeck(theDeckName);
+    // console.log('gonna update current deck div');
+    updateCurrentDeckDiv();
+    // console.log('gonna style current decDiv ' + currentDeckDiv);
     styleCurrent();
     populateCard();
 }
 const firstDrawDecks = (arrayOfDecks) => {
-    console.log('running drawDecks')
-    console.log(deckArray[1]);
+    // console.log('running drawDecks')
+    // console.log(deckArray[1]);
     arrayOfDecks.forEach(aDeck => {
         if((arrayOfDecks.indexOf(aDeck)) !== 0){
             const deckDiv = document.createElement('div');
@@ -227,25 +243,43 @@ const firstDrawDecks = (arrayOfDecks) => {
 
             deckDiv.classList.add(deckTitleDiv.textContent);
 
+            const deckDeleteButton = drawDeckDeleteButton();
+            deckDiv.appendChild(deckDeleteButton);
+
             deckDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('click', updateCurrentDeck);
+            deckTitleDiv.addEventListener('input', saveDeckTitle);
         }
         });
     updateCurrentDeckDiv();
-    console.log(currentDeckDiv);
+    // console.log(currentDeckDiv);
 
 }
 
 
 const saveDeckTitle = (e) => {
-    console.log('saving change to title');
+    // console.log('saving change to title');
     const text = e.target.textContent;
     currentDeck.deckName = text;
 }
 
+const drawBlankDecks = () => {
+    const blankDeckDiv = document.createElement('div');
+    blankDeckDiv.setAttribute('class', 'blankDeck');
+    deckArea.appendChild(blankDeckDiv);
+
+    const littlePlus = document.createElement('div');
+    littlePlus.setAttribute('class', 'littlePlus');
+    littlePlus.textContent = '+';
+    littlePlus.addEventListener('click', showDeckForm);
+    blankDeckDiv.appendChild(littlePlus);
+
+}
+
 const drawDecks = (arrayOfDecks) => {
-    console.log('running drawDecks')
-    console.log(deckArray[1]);
+    if(arrayOfDecks !== undefined){
+        // console.log('running drawDecks')
+    // console.log(deckArray[1]);
     arrayOfDecks.forEach(aDeck => {
         if((arrayOfDecks.indexOf(aDeck)) !== 0){
             const deckDiv = document.createElement('div');
@@ -260,6 +294,9 @@ const drawDecks = (arrayOfDecks) => {
 
             deckDiv.classList.add(deckTitleDiv.textContent);
 
+            const deckDeleteButton = drawDeckDeleteButton();
+            deckDiv.appendChild(deckDeleteButton);
+
             // const editDeck = document.createElement('div');
             // editDeck.setAttribute('id', 'editDeck')
             // deckDiv.appendChild(editDeck)
@@ -273,7 +310,12 @@ const drawDecks = (arrayOfDecks) => {
         });
     updateCurrentDeckDiv();
     styleCurrent();
-    console.log(currentDeckDiv);
+    // console.log(currentDeckDiv);
+    }
+    else{
+        drawBlankDecks();
+    }
+    
 
 }
 
@@ -301,22 +343,25 @@ const drawBackgroundCards = (num) => {
 }
 
 const saveTitle = (e) => {
-    console.log('saving change to title');
+    e.stopImmediatePropagation();
+
+    // console.log('saving change to title');
     const text = e.target.textContent;
-    console.log(text);
-    console.log(currentDeck.bookmark);
-    console.log(currentDeck.cardsArray[currentDeck.bookmark]);
+    // console.log(text);
+    // console.log(currentDeck.bookmark);
+    // console.log(currentDeck.cardsArray[currentDeck.bookmark]);
     // currentDeck.cardsArray[currentDeck.bookmark] = text;
     const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
-    console.log(theCard);
+    // console.log(theCard);
     theCard.cardName = text;
     currentDeck.cardsArray[currentDeck.bookmark] = text;
-    console.log(theCard.cardName);
+    // console.log(theCard.cardName);
 }
 
 const drawTitleDiv = () => {
     const cardTitleDiv = document.createElement('div');
     cardTitleDiv.setAttribute('id', 'cardTitle');
+    cardTitleDiv.setAttribute('class', 'cardTitle');
     cardTitleDiv.setAttribute('contenteditable', 'true');
     cardTitleDiv.addEventListener('input', saveTitle);
     return cardTitleDiv;
@@ -329,9 +374,9 @@ const drawDateDiv = () => {
 }
 
 const saveStep = (e) => {
-    console.log('saving change to text');
+    // console.log('saving change to text');
     const text = e.target.textContent;
-    console.log(text);
+    // console.log(text);
     const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
     theCard.cardSteps[0] = text;
 }
@@ -342,6 +387,37 @@ const drawStepsDiv = () => {
     cardStepsDiv.setAttribute('contenteditable', 'true');
     cardStepsDiv.addEventListener('input', saveStep);
     return cardStepsDiv;
+}
+
+const deleteAndEraseCard = () => {
+    controller.deleteCard();
+    populateCard();
+}
+
+const deleteAndEraseDeck = (e) => {
+    const deleteDiv = e.target;
+    const deckDiv = deleteDiv.parentElement;
+    const deckTitleDiv = deckDiv.firstChild;
+    const deckTitle = deckTitleDiv.textContent;
+    controller.deleteDeck(deckTitle);
+    drawDecks();
+}
+
+const drawDeleteButton = () => {
+    const cardDeleteButton = document.createElement('div');
+    cardDeleteButton.setAttribute('id', 'cardDelete');
+    cardDeleteButton.addEventListener('click', deleteAndEraseCard);
+    cardDeleteButton.textContent = '-'
+    return cardDeleteButton;
+}
+
+const drawDeckDeleteButton = () => {
+    const deckDeleteButton = document.createElement('div');
+    deckDeleteButton.setAttribute('id', 'deckDelete');
+    deckDeleteButton.addEventListener('click', deleteAndEraseDeck);
+    deckDeleteButton.textContent = '-'
+    return deckDeleteButton;
+
 }
 
 const drawTopCard = () => {
@@ -355,16 +431,18 @@ const drawTopCard = () => {
     cardDiv.appendChild(cardDateDiv);
     const cardStepsDiv = drawStepsDiv();
     cardDiv.appendChild(cardStepsDiv);
+    const cardDeleteButton = drawDeleteButton();
+    cardDiv.appendChild(cardDeleteButton);
     return cardDiv;
 }
 
 const getBookmarkedCard = (aDeck) => {
     const thisBookmark = aDeck.bookmark;
     const thisCardName = aDeck.cardsArray[thisBookmark];
-    console.log(thisCardName);
+    console.log(`bookmrked crd is ${thisCardName}`);
     const aCard = controller.getCard(thisCardName);
 
-    console.log(aCard);
+    // console.log(aCard);
     return aCard;
 }
 
@@ -384,6 +462,8 @@ const populateCard = () => {
     const theCard = getBookmarkedCard(currentDeck);
     console.log('puopulating with: ' + theCard);
     const cardTitleDiv = document.getElementById('cardTitle');
+    cardTitleDiv.classList.remove('bigPlus');
+    cardTitleDiv.classList.add('cardTitle');
     if(theCard !== undefined){
         cardTitleDiv.textContent = theCard.cardName;
     }
@@ -391,6 +471,7 @@ const populateCard = () => {
         console.log('making plus card')
         cardTitleDiv.textContent = '+';
         cardTitleDiv.setAttribute('class', 'bigPlus');
+        cardTitleDiv.setAttribute('contenteditable', false);
         cardTitleDiv.addEventListener('click', showCardForm);
     }
     const cardDateDiv = document.getElementById('cardDate');
@@ -455,8 +536,8 @@ const previousBookmark = () => {
 
 const addEventListeners = (elementName, aFunction) =>{
     const element = document.getElementById(`${elementName}`);
-    console.log(element);
-    console.log(aFunction);
+    // console.log(element);
+    // console.log(aFunction);
     element.addEventListener('click', aFunction);
 }
 
@@ -526,7 +607,7 @@ const resetFormCard = () => {
 }
 
 const showForm = () => {
-    console.log('showing form!');
+    // console.log('showing form!');
     const form = document.getElementById('overLayHolder');
     form.style.visibility = 'visible';
 }
@@ -586,20 +667,37 @@ const saveCard = () => {
     aCard.cardDate = document.getElementById('date').value;
     const deckList = document.getElementById('cardDeck');
     const collection = deckList.selectedOptions;
+    console.log(`the current deck was ${currentDeck}`);
+    if(collection.length < 2 ){
+        const theSelectedDeck = collection[0].textContent;
+        const theDeckName = theSelectedDeck;
+        updateCurrentDeckByName(theDeckName);
+    }
+    console.log(`the current deck is now ${currentDeck}`);
+    console.log(`selected options collection is ${collection}`);
     Array.from(collection).forEach(option => {
+        console.log(`this option is ${option} it's value is ${option.value}`);
             aCard.cardDecks.push(option.value); 
             if(option.value === currentDeck.deckName){
                 isCurrent = 1;
+                console.log(`${option.value} is ${currentDeck.deckName}`);
             } 
     })
     aCard.cardDecks.forEach(deckNameString => {
-        const aDeck = controller.getDeck(deckNameString)
-        controller.addCardtoDeck(aCard, aDeck);
+        if(deckNameString !== 'all'){
+            const aDeck = controller.getDeck(deckNameString)
+            controller.addCardtoDeck(aCard, aDeck);
+        }
     })
     if(isCurrent === 1){
-        currentDeck.bookmark = currentDeck.cardsArray.indexOf(aCard.CardName) + 1;
+        console.log(`${currentDeck.bookmark} is the current bookmark of the current deck.`)
+        console.log(`but now it will be ${currentDeck.cardsArray.indexOf(aCard.cardName)}`);
+        // const theCardBookmark = currentDeck.cardsArray.indexOf(aCard.cardName);
+        currentDeck.bookmark = currentDeck.cardsArray.indexOf(aCard.cardName);
+        console.log(`the current deck bookmark is now ${currentDeck.bookmark}`);
+        isCurrent = 0;
     }
-    console.log(currentDeck);
+    console.log(`saving card. current deck is ${currentDeck}`);
     console.log(currentDeck.bookmark);
     populateCard();
     resetFormCard();
@@ -610,7 +708,7 @@ const saveCard = () => {
 
 
 const saveForm = () => {
-    console.log('save type is: '+ formType);
+    // console.log('save type is: '+ formType);
     if(formType ==='deck'){
         console.log('saving deck!')
         saveDeck();

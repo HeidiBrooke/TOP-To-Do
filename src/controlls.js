@@ -70,14 +70,14 @@ deckArray.push(defaultDeck);
     
 
     export const getCard = (name) => {
-        console.log(name)
+        // console.log(name)
       let thisCard;
-      console.log(thisCard);
-      console.log(all.length);
+      // console.log(thisCard);
+      // console.log(all.length);
       console.log(all.cardsArray);
       all.cardsArray.forEach((cardElement) => {
-        console.log(cardElement.cardName);
-        console.log(name);
+        // console.log(cardElement.cardName);
+        // console.log(name);
         if (cardElement.cardName === name) {
           console.log(`${cardElement.cardName} === ${name}`);
           console.log(thisCard);
@@ -107,12 +107,12 @@ deckArray.push(defaultDeck);
         }
         console.log("getting deck: " + theDeck);
       });
-      if (theDeck === undefined) {
-        const deckName = prompt(
-          "that deck does not exist, please enter another name:"
-        );
-        theDeck = getDeck(deckName);
-      }
+      // if (theDeck === undefined) {
+      //   const deckName = prompt(
+      //     "that deck does not exist, please enter another name:"
+      //   );
+      //   theDeck = getDeck(deckName);
+      // }
       console.log(theDeck);
       return theDeck;
     };
@@ -147,15 +147,20 @@ deckArray.push(defaultDeck);
       return thisDeck;
     };
 
-    const deleteCard = (thisCard) => {
+    export const deleteCard = () => {
+      console.log('deleting')
+      const cardDiv = document.getElementById('cardTitle');
+      const aCardName = cardDiv.textContent;
+      const thisCard = getCard(aCardName);
       const index = all.cardsArray.indexOf(thisCard);
       if (index > -1) {
         all.cardsArray.splice(index, 1);
       }
+      console.log(all);
       return all;
     };
 
-    const deleteDeck = (aDeckName) => {
+    export const deleteDeck = (aDeckName) => {
       const deckObj = getDeck(aDeckName);
       const index = table.indexOf(deckObj);
       if (index > -1) {
