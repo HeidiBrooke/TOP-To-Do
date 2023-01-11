@@ -224,6 +224,20 @@ const updateCurrentDeckByName = (name) => {
     styleCurrent();
     populateCard();
 }
+
+const drawBlankDecks = () => {
+    const blankDeckDiv = document.createElement('div');
+    blankDeckDiv.setAttribute('class', 'blankDeck');
+    deckArea.appendChild(blankDeckDiv);
+
+    const littlePlus = document.createElement('div');
+    littlePlus.setAttribute('class', 'littlePlus');
+    littlePlus.textContent = '+';
+    littlePlus.addEventListener('click', showDeckForm)
+    blankDeckDiv.appendChild(littlePlus);
+
+}
+
 const firstDrawDecks = (arrayOfDecks) => {
     // console.log('running drawDecks')
     // console.log(deckArray[1]);
