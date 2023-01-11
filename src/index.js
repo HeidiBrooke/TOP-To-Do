@@ -469,8 +469,15 @@ const saveStep = (e) => {
             const newStepDiv = drawCardStep();
             newStepDiv.focus();
             }
+            e.target.blur();
+            const cardStepsDiv = document.getElementById('cardSteps');
+            const thisStep = cardStepsDiv.lastChild;
+            // if(e.target.hasFocus() == false){
+            //     thisStep.remove();
+            // }
+            
         }
-        e.target.blur();
+        
         
     }
     
