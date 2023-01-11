@@ -97,6 +97,7 @@ deckArray.push(defaultDeck);
     };
 
     export const getDeck = (name) => {
+      console.log('GETTING DECK');
       let theDeck;
       table.forEach((deckElement) => {
         console.log("the  deck name is: " + deckElement.deckName);
@@ -161,12 +162,14 @@ deckArray.push(defaultDeck);
     };
 
     export const deleteDeck = (aDeckName) => {
+      console.log('DELETEING DECK IN CONTROLLS')
+      console.log(`deck name is ${aDeckName}`)
       const deckObj = getDeck(aDeckName);
-      const index = table.indexOf(deckObj);
+      const index = deckArray.indexOf(deckObj);
       if (index > -1) {
-        table.splice(index, 1);
+        deckArray.splice(index, 1);
       }
-      return table;
+      return deckArray;
     };
 
     const moveCard = (theCardName, deckOneName, deckTwoName) => {
