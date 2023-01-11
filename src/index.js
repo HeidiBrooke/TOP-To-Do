@@ -144,14 +144,40 @@ cardDeck.setAttribute('id', 'cardDeck');
 cardDeck.setAttribute('name', 'cardDeck');
 // cardDeck.setAttribute('placeholder', 'Deck');
 
-const step = document.createElement('input');
-step.setAttribute('class', 'step');
-step.classList.add('input');
-cardForm.appendChild(step);
-step.setAttribute('id', 'step');
-step.setAttribute('type', 'text');
-step.setAttribute('name', 'step');
-step.setAttribute('placeholder', '+ step');
+const stepHolder = document.createElement('div');
+stepHolder.classList.add('stepHolder');
+stepHolder.setAttribute('id', 'stepHolder');
+cardForm.appendChild(stepHolder);
+
+// const preStep = document.createElement('div');
+// preStep.classList.add('preStep');
+// preStep.classList.add('input');
+// preStep.setAttribute('id', 'preStep');
+// stepHolder.appendChild(preStep);
+// preStep.textContent = '+';
+
+const addNewStepField = (e) => {
+    if(e.keyCode === 13){
+        console.log(`pressed ENTER`);
+        const step = drawStep();
+        step.focus();
+    }
+}
+const drawStep = () => {
+    const step = document.createElement('input');
+    step.setAttribute('class', 'step');
+    step.classList.add('input');
+    stepHolder.appendChild(step);
+    step.setAttribute('id', 'step');
+    step.setAttribute('type', 'text');
+    step.setAttribute('name', 'step');
+    step.setAttribute('placeholder', '+ step');
+    step.addEventListener('keyup', addNewStepField);
+    return step;
+}
+
+drawStep();
+
 
 const date = document.createElement('input');
 date.setAttribute('class', 'date');
@@ -392,21 +418,64 @@ const drawDateDiv = () => {
     return cardDateDiv;
 }
 
-const saveStep = (e) => {
-    // console.log('saving change to text');
-    const text = e.target.textContent;
-    // console.log(text);
-    const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
-    theCard.cardSteps[0] = text;
-}
-
 const drawStepsDiv = () => {
+    console.log(`drawing step div`)
     const cardStepsDiv = document.createElement('ul');
     cardStepsDiv.setAttribute('id', 'cardSteps');
-    cardStepsDiv.setAttribute('contenteditable', 'true');
-    cardStepsDiv.addEventListener('input', saveStep);
     return cardStepsDiv;
 }
+
+const drawCardStep = () => {
+    console.log('drawing the step!')
+    const stepDiv = document.createElement('li');
+    stepDiv.setAttribute('contenteditable', 'true');
+    stepDiv.setAttribute('class', 'stepDiv');
+    stepDiv.addEventListener('keydown', saveStep);
+    const cardStepsDiv = document.getElementById('cardSteps');
+    cardStepsDiv.appendChild(stepDiv);
+    return stepDiv;
+}
+
+const saveStep = (e) => {
+    if(e.keyCode === 13){
+        e.preventDefault();
+        const initialText = e.target.textContent;
+        const stepString = e.target.textContent;
+        console.log(`stepString is ${stepString}`);
+        const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+        const index = theCard.cardSteps.indexOf(stepString);
+        console.log(`the card steps are: ${theCard.cardSteps}`);
+        const text = e.target.textContent;
+        console.log(`text is ${text}`);
+        console.log(`index is ${index}`);
+        if(text !== ''){
+            if(theCard.cardSteps.length < 1){
+                
+                    console.log(`card steps less than 1`)
+                    theCard.cardSteps.push(text);
+                
+            }
+            else {
+                    if(theCard.cardSteps[index] === initialText){
+                        theCard.cardSteps[index] = text;
+                    }
+                    else {
+                        theCard.cardSteps.push(text);
+                    }
+                        
+                
+                    
+                }
+            const newStepDiv = drawCardStep();
+            newStepDiv.focus();
+            }
+        }
+        e.target.blur();
+        
+    }
+    
+
+
 
 const deleteAndEraseCard = () => {
     const thisCardName = document.getElementById('cardTitle').textContent;
@@ -511,6 +580,7 @@ const eraseSteps = () => {
     const stepsDiv = document.getElementById('cardSteps');
     const steps = stepsDiv.children;
     Array.from(steps).forEach(stepElement => {
+        console.log(`removing ${stepElement} from ${stepsDiv}`)
         stepElement.remove();
     })
     
@@ -550,14 +620,16 @@ const populateCard = () => {
     console.log(cardStepsDiv);
     console.log(typeof cardStepsDiv);
     if(theCard !== undefined){
-        if(theCard.cardSteps !== undefined){
+        if(theCard.cardSteps.length > 1){
+            console.log('there are step(s)! DRAW STEP DIV(s)');
             theCard.cardSteps.forEach(stepString => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${stepString}`
-                console.log(cardStepsDiv);
-                console.log(typeof cardStepsDiv);
-                cardStepsDiv.appendChild(listItem);
+                const aStep = drawCardStep();
+                aStep.textContent = stepString;
             })
+        }
+        else{
+            console.log('the are no steps! DRAW empty STEP DIV');
+            drawCardStep();
         }
     }
     else {
@@ -694,7 +766,7 @@ const hideForm = () => {
 const showDeckForm = () => {
     showForm();
     formType = 'deck';
-    let aDiv = document.getElementById('step');
+    let aDiv = document.getElementById('cardSteps');
     aDiv.style.visibility = 'hidden';
     aDiv = document.getElementById('date');
     aDiv.style.visibility = 'hidden';
@@ -730,7 +802,11 @@ const saveCard = () => {
     let isCurrent = 0;
     let aCard = document.getElementById('card-title').value;
     aCard = controller.createCard(aCard);
-    aCard.cardSteps.push(document.getElementById('step').value);
+    const stepCollection = document.getElementsByClassName('step');
+    Array.from(stepCollection).forEach(step => {
+        aCard.cardSteps.push(step.value);
+    })
+
     aCard.cardDate = document.getElementById('date').value;
     const deckList = document.getElementById('cardDeck');
     const collection = deckList.selectedOptions;
