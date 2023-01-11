@@ -142,7 +142,7 @@ deckArray.push(defaultDeck);
 
     
 
-    const deleteCardFromDeck = (thisCard, thisDeck) => {
+    export const deleteCardFromDeck = (thisCard, thisDeck) => {
       const index = thisDeck.cardsArray.indexOf(thisCard.cardName);
       if (index > -1) {
         thisDeck.cardsArray.splice(index, 1);

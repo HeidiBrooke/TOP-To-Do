@@ -43,6 +43,7 @@ div.textContent = 'Decks';
 const addDeckButton = document.createElement('div');
 addDeckButton.setAttribute('id', 'addDeckButton');
 addDeckButton.setAttribute('class', 'title')
+addDeckButton.classList.add('grow');
 deckDockMenu.appendChild(addDeckButton);
 addDeckButton.textContent = '+';
 
@@ -62,6 +63,7 @@ div.textContent = 'Cards';
 const addCardButton = document.createElement('div');
 addCardButton.setAttribute('id', 'addCardButton');
 addCardButton.setAttribute('class', 'title')
+addCardButton.classList.add('grow');
 cardDockMenu.appendChild(addCardButton);
 addCardButton.textContent = '+';
 
@@ -108,6 +110,7 @@ formDiv.appendChild(submitButtonsDiv);
 const cancel = document.createElement('div');
 cancel.setAttribute('class', 'check');
 cancel.setAttribute('id', 'cancel');
+cancel.classList.add('grow');
 submitButtonsDiv.appendChild(cancel);
 cancel.textContent = '✖';
 
@@ -115,6 +118,7 @@ const check = document.createElement('div');
 check.setAttribute('class', 'check');
 submitButtonsDiv.appendChild(check);
 check.setAttribute('id', 'check');
+check.classList.add('grow');
 check.textContent = '✓';
 
 const cardForm = document.createElement('form');
@@ -202,9 +206,20 @@ const removeSelectedStyle = () => {
 const updateCurrentDeck = (e) => {
     removeSelectedStyle();
     // console.log('im UPDATInG!');
-    console.log(e.target);
-    const theDeckName = (e.target.textContent);
-    currentDeck = controller.getDeck(theDeckName);
+    console.log(e.target.innerHTML);
+    if(e.target.classList.contains('deck')){
+        console.log('clickedon DECK DIV')
+        console.log(e.target.getAttribute('data-title'))
+        const theDeckName = (e.target.getAttribute('data-title'));
+        currentDeck = controller.getDeck(theDeckName);
+    }
+    else {
+        console.log('clickedon TITLE DIV')
+        console.log(e.target.textContent)
+        const theDeckName = (e.target.textContent);
+        currentDeck = controller.getDeck(theDeckName);
+    }
+    
     // console.log('gonna update current deck div');
     updateCurrentDeckDiv();
     // console.log('gonna style current decDiv ' + currentDeckDiv);
@@ -232,6 +247,7 @@ const drawBlankDeck = () => {
 
     const littlePlus = document.createElement('div');
     littlePlus.setAttribute('class', 'littlePlus');
+    littlePlus.classList.add('grow');
     littlePlus.textContent = '+';
     littlePlus.addEventListener('click', showDeckForm)
     blankDeckDiv.appendChild(littlePlus);
@@ -246,27 +262,31 @@ const firstDrawDecks = (arrayOfDecks) => {
     // console.log('running drawDecks')
     // console.log(deckArray[1]);
     arrayOfDecks.forEach(aDeck => {
-        if((arrayOfDecks.indexOf(aDeck)) !== 0){
-            const deckDiv = document.createElement('div');
+        const deckDiv = document.createElement('div');
             deckDiv.setAttribute('class', 'deck');
+            // deckDiv.classList.add('grow');
             deckArea.appendChild(deckDiv);
 
             const deckTitleDiv = document.createElement('div');
             deckTitleDiv.setAttribute('id', 'deckTitle');
+            deckTitleDiv.classList.add('grow');
             deckDiv.appendChild(deckTitleDiv);
             deckTitleDiv.textContent = aDeck.deckName;
 
-            deckDiv.classList.add(deckTitleDiv.textContent);
-
-            const deckDeleteButton = drawDeckDeleteButton();
-            deckDiv.appendChild(deckDeleteButton);
+            deckDiv.setAttribute('data-title', `${aDeck.deckName}`);
 
             deckDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('input', saveDeckTitle);
-        }
+
+            if((arrayOfDecks.indexOf(aDeck)) !== 0){
+                const deckDeleteButton = drawDeckDeleteButton();
+                deckDiv.appendChild(deckDeleteButton);
+                deckDeleteButton.classList.add('grow');
+                deckTitleDiv.setAttribute('contenteditable', 'true');
+            }
         });
-        drawBlankDeck();
+    drawBlankDeck();
     updateCurrentDeckDiv();
     // console.log(currentDeckDiv);
 
@@ -283,21 +303,16 @@ const drawDecks = (arrayOfDecks) => {
     console.log('running drawDecks')
     // console.log(deckArray[1]);
     arrayOfDecks.forEach(aDeck => {
-        if((arrayOfDecks.indexOf(aDeck)) !== 0){
-            const deckDiv = document.createElement('div');
+        const deckDiv = document.createElement('div');
             deckDiv.setAttribute('class', 'deck');
             deckArea.appendChild(deckDiv);
 
             const deckTitleDiv = document.createElement('div');
             deckTitleDiv.setAttribute('id', 'deckTitle');
-            deckTitleDiv.setAttribute('contenteditable', 'true');
             deckDiv.appendChild(deckTitleDiv);
             deckTitleDiv.textContent = aDeck.deckName;
 
-            deckDiv.classList.add(deckTitleDiv.textContent);
-
-            const deckDeleteButton = drawDeckDeleteButton();
-            deckDiv.appendChild(deckDeleteButton);
+            deckDiv.setAttribute('data-title', `${aDeck.deckName}`);
 
             // const editDeck = document.createElement('div');
             // editDeck.setAttribute('id', 'editDeck')
@@ -308,8 +323,13 @@ const drawDecks = (arrayOfDecks) => {
             // deckTitleDiv.addEventListener('click', updateCurrentDeck);
             deckTitleDiv.addEventListener('input', saveDeckTitle);
             // editDeck.addEventListener('click', showForm);
+        if((arrayOfDecks.indexOf(aDeck)) !== 0){
+            const deckDeleteButton = drawDeckDeleteButton();
+            deckDiv.appendChild(deckDeleteButton);
+            deckTitleDiv.setAttribute('contenteditable', 'true');
         }
-        });
+        }
+        );
     eraseBlankDeck();
     drawBlankDeck();
     updateCurrentDeckDiv();
@@ -389,19 +409,36 @@ const drawStepsDiv = () => {
 }
 
 const deleteAndEraseCard = () => {
-    controller.deleteCard();
+    const thisCardName = document.getElementById('cardTitle').textContent;
+    const thisCard = controller.getCard(thisCardName);
+    if(currentDeck === all){
+        thisCard.cardDecks.forEach(deckElement => {
+            const thisDeck = controller.getDeck(deckElement);
+            controller.deleteCardFromDeck(thisCard, thisDeck);
+        })
+        controller.deleteCard(thisCard);
+    }
+    else{
+        controller.deleteCardFromDeck(thisCard, currentDeck);
+    }
+    
+    
+    // controller.deleteCard();
     populateCard();
 }
 
 const deleteAndEraseDeck = (e) => {
+    console.log(`erasing and deleting deck.${currentDeck.deckName}`)
     e.stopPropagation();
     const deleteDiv = e.target;
     const deckDiv = deleteDiv.parentElement;
     const deckTitleDiv = deckDiv.firstChild;
     const deckTitle = deckTitleDiv.textContent;
     const currentDeckIndex = deckArray.indexOf(currentDeck);
+    console.log(`the index of the currenDeck is ${currentDeckIndex}`)
     controller.deleteDeck(deckTitle);
     if(currentDeck.deckName === deckTitle){
+        console.log(`the deck deleted was the current deck.`)
         if(deckArray.length < 2){
             currentDeck = all;
         }
@@ -413,6 +450,10 @@ const deleteAndEraseDeck = (e) => {
         eraseDecks();
         drawDecks(deckArray);
     }
+    else{
+        eraseDecks();
+        drawDecks(deckArray);
+    }
     console.log(`AFTER DELETE currentDeck is ${currentDeck.deckName}`);
 }
 
@@ -420,6 +461,7 @@ const drawDeleteButton = () => {
     const cardDeleteButton = document.createElement('div');
     cardDeleteButton.setAttribute('id', 'cardDelete');
     cardDeleteButton.addEventListener('click', deleteAndEraseCard);
+    cardDeleteButton.classList.add('grow');
     cardDeleteButton.textContent = '-'
     return cardDeleteButton;
 }
@@ -483,6 +525,7 @@ const populateCard = () => {
     console.log('puopulating with: ' + theCard);
     const cardTitleDiv = document.getElementById('cardTitle');
     cardTitleDiv.classList.remove('bigPlus');
+    cardTitleDiv.classList.remove('grow');
     cardTitleDiv.classList.add('cardTitle');
     if(theCard !== undefined){
         cardTitleDiv.textContent = theCard.cardName;
@@ -492,6 +535,7 @@ const populateCard = () => {
         cardTitleDiv.textContent = '+';
         cardTitleDiv.setAttribute('class', 'bigPlus');
         cardTitleDiv.setAttribute('contenteditable', false);
+        cardTitleDiv.classList.add('grow');
         cardTitleDiv.addEventListener('click', showCardForm);
     }
     const cardDateDiv = document.getElementById('cardDate');
