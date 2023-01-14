@@ -55,8 +55,9 @@ div {
     height: 200px;
 }
 
-.deckArea{
+#deckArea{
     display: flex;
+    flex-direction: row;
     gap: 7px;
 }
 

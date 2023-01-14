@@ -1,160 +1,53 @@
 import * as controller from './controlls';
-import {defaultDeck, defaultCard, deckArray, all} from './controlls';
+import {defaultDeck, deckArray, all} from './controlls';
 import './style.css';
-import card from "./card";
-import deck from "./deck";
+import gui from './GUI';
 
+let currentDeck = defaultDeck;
+let currentDeckDiv;
 
+gui(deckArray, currentDeck);
 
-const content = document.createElement('div');
-content.setAttribute('id', 'content');
-document.body.appendChild(content);
+const selectDeck = (e) => {
+    const nameOfDeck = e.target.getAttribute('data-title');
+    currentDeck = controller.getDeck(nameOfDeck);
+    refresh();
 
-const container = document.createElement('div');
-container.setAttribute('id', 'container');
-content.appendChild(container);
+}
 
-const header = document.createElement('div');
-header.setAttribute('id', 'header');
-container.appendChild(header);
+const selectDeckListeners = () => {
+    const deckCollection = document.getElementsByClassName('deck');
+    Array.from(deckCollection).forEach(deckDiv => {
+       deckDiv.addEventListener('click', selectDeck);
+    })
+}
 
-const deckDock = document.createElement('div');
-deckDock.setAttribute('id', 'deckDock');
-container.appendChild(deckDock);
+const setListeners = () => {
+    selectDeckListeners();
+}
 
-const cardDock = document.createElement('div');
-cardDock.setAttribute('id', 'table');
-container.appendChild(cardDock);
+const eraseGUI = () => {
+    const decks = document.getElementsByClassName('deck');
+    Array.from(decks).forEach(deckElement => 
+        deckElement.remove());
+    const cardArea = document.getElementById('cardArea');
+    const cards = cardArea.childNodes;
+    Array.from(cards).forEach(cardElement => {
+        cardElement.remove();
+    })
+}
+const refresh = () => {
+    eraseGUI();
+    gui(deckArray, currentDeck);
+    setListeners()
+}
 
-const logo = document.createElement('div');
-logo.setAttribute('id', 'logo');
-header.appendChild(logo);
-logo.textContent = 'Shuffle';
+refresh();
 
-const deckDockMenu = document.createElement('div');
-deckDockMenu.setAttribute('class', 'menu');
-deckDock.appendChild(deckDockMenu);
-
-let div = document.createElement('div');
-div.setAttribute('class', 'title');
-deckDockMenu.appendChild(div);
-div.textContent = 'Decks';
-
-const addDeckButton = document.createElement('div');
-addDeckButton.setAttribute('id', 'addDeckButton');
-addDeckButton.setAttribute('class', 'title')
-addDeckButton.classList.add('grow');
-deckDockMenu.appendChild(addDeckButton);
-addDeckButton.textContent = '+';
-
-const deckArea = document.createElement('div');
-deckArea.setAttribute('class', 'deckArea');
-deckDock.appendChild(deckArea);
-
-const cardDockMenu = document.createElement('div');
-cardDockMenu.setAttribute('class', 'menu');
-cardDock.appendChild(cardDockMenu);
-
-div = document.createElement('div');
-div.setAttribute('class', 'title');
-cardDockMenu.appendChild(div);
-div.textContent = 'Cards';
-
-const addCardButton = document.createElement('div');
-addCardButton.setAttribute('id', 'addCardButton');
-addCardButton.setAttribute('class', 'title')
-addCardButton.classList.add('grow');
-cardDockMenu.appendChild(addCardButton);
-addCardButton.textContent = '+';
-
-const cardArea = document.createElement('div');
-cardArea.setAttribute('id', 'cardArea');
-cardDock.appendChild(cardArea);
-
-const forwardButton = document.createElement('div');
-forwardButton.setAttribute('class', 'nextButton');
-forwardButton.setAttribute('id', 'forwardButton');
-cardArea.appendChild(forwardButton);
-forwardButton.textContent = '>';
-
-const backwardButton = document.createElement('div');
-backwardButton.setAttribute('class', 'nextButton');
-backwardButton.setAttribute('id', 'backwardButton');
-cardArea.appendChild(backwardButton);
-backwardButton.textContent = '<';
-
-const overLayHolder = document.createElement('div');
-overLayHolder.setAttribute('class', 'content');
-overLayHolder.setAttribute('id', 'overLayHolder');
-overLayHolder.classList.add('overLayHolder');
-content.appendChild(overLayHolder);
-
-const overlay = document.createElement('div');
-overlay.setAttribute('class', 'overlay');
-overLayHolder.appendChild(overlay);
-
-const formDiv = document.createElement('div');
-formDiv.setAttribute('class', 'formDiv');
-overLayHolder.appendChild(formDiv);
-
-const newCardForm = document.createElement('div');
-newCardForm.setAttribute('class', 'cardBig');
-newCardForm.classList.add('editSize');
-newCardForm.setAttribute('id', 'newCardForm');
-formDiv.appendChild(newCardForm);
-
-const submitButtonsDiv = document.createElement('div');
-submitButtonsDiv.setAttribute('class', 'submitButtonsDiv');
-formDiv.appendChild(submitButtonsDiv);
-
-const cancel = document.createElement('div');
-cancel.setAttribute('class', 'check');
-cancel.setAttribute('id', 'cancel');
-cancel.classList.add('grow');
-submitButtonsDiv.appendChild(cancel);
-cancel.textContent = '✖';
-
-const check = document.createElement('div');
-check.setAttribute('class', 'check');
-submitButtonsDiv.appendChild(check);
-check.setAttribute('id', 'check');
-check.classList.add('grow');
-check.textContent = '✓';
-
-const cardForm = document.createElement('form');
-cardForm.setAttribute('class', 'cardForm');
-newCardForm.appendChild(cardForm);
-
-const cardTitleInput = document.createElement('input');
-cardTitleInput.setAttribute('class', 'cardTitleInput');
-cardTitleInput.classList.add('input');
-cardForm.appendChild(cardTitleInput);
-cardTitleInput.setAttribute('id', 'card-title');
-cardTitleInput.setAttribute('type', 'text');
-cardTitleInput.setAttribute('name', 'card-title');
-cardTitleInput.setAttribute('placeholder', 'Title');
-
-const cardDeck = document.createElement('select');
-cardDeck.setAttribute('class', 'cardDeck');
-cardDeck.setAttribute('multiple', 'multiple');
-cardDeck.classList.add('input');
-cardForm.appendChild(cardDeck);
-cardDeck.setAttribute('id', 'cardDeck');
-// cardDeck.setAttribute('type', '');
-cardDeck.setAttribute('name', 'cardDeck');
-// cardDeck.setAttribute('placeholder', 'Deck');
-
-const stepHolder = document.createElement('div');
-stepHolder.classList.add('stepHolder');
-stepHolder.setAttribute('id', 'stepHolder');
-cardForm.appendChild(stepHolder);
-
-// const preStep = document.createElement('div');
-// preStep.classList.add('preStep');
-// preStep.classList.add('input');
-// preStep.setAttribute('id', 'preStep');
-// stepHolder.appendChild(preStep);
-// preStep.textContent = '+';
+const addEventListeners = (elementName, aFunction) =>{
+    const element = document.getElementById(`${elementName}`);
+    element.addEventListener('click', aFunction);
+}
 
 const addNewStepField = (e) => {
     if(e.keyCode === 13){
@@ -163,36 +56,6 @@ const addNewStepField = (e) => {
         step.focus();
     }
 }
-const drawStep = () => {
-    const step = document.createElement('input');
-    step.setAttribute('class', 'step');
-    step.classList.add('input');
-    stepHolder.appendChild(step);
-    step.setAttribute('id', 'step');
-    step.setAttribute('type', 'text');
-    step.setAttribute('name', 'step');
-    step.setAttribute('placeholder', '+ step');
-    step.addEventListener('keyup', addNewStepField);
-    return step;
-}
-
-drawStep();
-
-
-const date = document.createElement('input');
-date.setAttribute('class', 'date');
-date.classList.add('input');
-cardForm.appendChild(date);
-// const theDate = new Date();
-// console.log('the date is' + theDate);
-date.setAttribute('id', 'date');
-date.setAttribute('type', 'date');
-date.setAttribute('name', 'date');
-date.setAttribute('placeholder', ``);
-
-let currentDeck = defaultDeck;
-let currentDeckDiv;
-
 
 const updateCurrentDeckDiv = () => {
     // console.log('im updateing the current DIV')
@@ -219,15 +82,9 @@ const updateCurrentDeckDiv = () => {
 }
 
 
-const styleCurrent = () => {
-    // console.log(currentDeckDiv);
-    currentDeckDiv.classList.add('selectedDeck');
-    
-}
 
-const removeSelectedStyle = () => {
-    currentDeckDiv.classList.remove('selectedDeck');
-}
+
+
 
 const updateCurrentDeck = (e) => {
     removeSelectedStyle();
@@ -266,57 +123,9 @@ const updateCurrentDeckByName = (name) => {
     populateCard();
 }
 
-const drawBlankDeck = () => {
-    const blankDeckDiv = document.createElement('div');
-    blankDeckDiv.setAttribute('class', 'blankDeck');
-    deckArea.appendChild(blankDeckDiv);
 
-    const littlePlus = document.createElement('div');
-    littlePlus.setAttribute('class', 'littlePlus');
-    littlePlus.classList.add('grow');
-    littlePlus.textContent = '+';
-    littlePlus.addEventListener('click', showDeckForm)
-    blankDeckDiv.appendChild(littlePlus);
-}
 
-const eraseBlankDeck = () => {
-    const blankDeckDiv = document.getElementsByClassName('blankDeck');
-    blankDeckDiv[0].remove();
-}
 
-const firstDrawDecks = (arrayOfDecks) => {
-    // console.log('running drawDecks')
-    // console.log(deckArray[1]);
-    arrayOfDecks.forEach(aDeck => {
-        const deckDiv = document.createElement('div');
-            deckDiv.setAttribute('class', 'deck');
-            // deckDiv.classList.add('grow');
-            deckArea.appendChild(deckDiv);
-
-            const deckTitleDiv = document.createElement('div');
-            deckTitleDiv.setAttribute('id', 'deckTitle');
-            deckTitleDiv.classList.add('grow');
-            deckDiv.appendChild(deckTitleDiv);
-            deckTitleDiv.textContent = aDeck.deckName;
-
-            deckDiv.setAttribute('data-title', `${aDeck.deckName}`);
-
-            deckDiv.addEventListener('click', updateCurrentDeck);
-            deckTitleDiv.addEventListener('click', updateCurrentDeck);
-            deckTitleDiv.addEventListener('input', saveDeckTitle);
-
-            if((arrayOfDecks.indexOf(aDeck)) !== 0){
-                const deckDeleteButton = drawDeckDeleteButton();
-                deckDiv.appendChild(deckDeleteButton);
-                deckDeleteButton.classList.add('grow');
-                deckTitleDiv.setAttribute('contenteditable', 'true');
-            }
-        });
-    drawBlankDeck();
-    updateCurrentDeckDiv();
-    // console.log(currentDeckDiv);
-
-}
 
 
 const saveDeckTitle = (e) => {
@@ -325,67 +134,9 @@ const saveDeckTitle = (e) => {
     currentDeck.deckName = text;
 }
 
-const drawDecks = (arrayOfDecks) => {
-    console.log('running drawDecks')
-    // console.log(deckArray[1]);
-    arrayOfDecks.forEach(aDeck => {
-        const deckDiv = document.createElement('div');
-            deckDiv.setAttribute('class', 'deck');
-            deckArea.appendChild(deckDiv);
 
-            const deckTitleDiv = document.createElement('div');
-            deckTitleDiv.setAttribute('id', 'deckTitle');
-            deckDiv.appendChild(deckTitleDiv);
-            deckTitleDiv.textContent = aDeck.deckName;
 
-            deckDiv.setAttribute('data-title', `${aDeck.deckName}`);
 
-            // const editDeck = document.createElement('div');
-            // editDeck.setAttribute('id', 'editDeck')
-            // deckDiv.appendChild(editDeck)
-            // editDeck.textContent = 'Edit';
-
-            deckDiv.addEventListener('click', updateCurrentDeck);
-            // deckTitleDiv.addEventListener('click', updateCurrentDeck);
-            deckTitleDiv.addEventListener('input', saveDeckTitle);
-            // editDeck.addEventListener('click', showForm);
-        if((arrayOfDecks.indexOf(aDeck)) !== 0){
-            const deckDeleteButton = drawDeckDeleteButton();
-            deckDiv.appendChild(deckDeleteButton);
-            deckTitleDiv.setAttribute('contenteditable', 'true');
-        }
-        }
-        );
-    eraseBlankDeck();
-    drawBlankDeck();
-    updateCurrentDeckDiv();
-    styleCurrent();
-    // console.log(currentDeckDiv);
-
-}
-
-const drawAllCardsStack = (aDeck) => {
-    const cardDiv = document.createElement('div');
-    cardDiv.setAttribute('id', 'cardBig');
-    cardDock.appendChild(cardDiv);
-    console.log(aDeck.cardsArray[aDeck.bookmark]);
-    const thisBookmark = aDeck.bookmark;
-    const theCard = aDeck.cardsArray[thisBookmark].cardName;
-
-    const cardTitleDiv = document.createElement('div');
-    cardTitleDiv.setAttribute('id', 'cardTitle');
-    cardDiv.appendChild(cardTitleDiv);
-    cardTitleDiv.textContent = theCard.CardName;
-}
-
-const drawBackgroundCards = (num) => {
-    for(let i = 0; i<num; i++ ){
-    const fakeCard = document.createElement('div');
-    fakeCard.setAttribute('class', 'cardBig');
-    fakeCard.classList.add(`stack${i}`);
-    cardArea.appendChild(fakeCard);
-    }
-}
 
 const saveTitle = (e) => {
     
@@ -403,38 +154,7 @@ const saveTitle = (e) => {
     // console.log(theCard.cardName);
 }
 
-const drawTitleDiv = () => {
-    const cardTitleDiv = document.createElement('div');
-    cardTitleDiv.setAttribute('id', 'cardTitle');
-    cardTitleDiv.setAttribute('class', 'cardTitle');
-    cardTitleDiv.setAttribute('contenteditable', 'true');
-    cardTitleDiv.addEventListener('input', saveTitle);
-    return cardTitleDiv;
-}
 
-const drawDateDiv = () => {
-    const cardDateDiv = document.createElement('div');
-    cardDateDiv.setAttribute('id', 'cardDate');
-    return cardDateDiv;
-}
-
-const drawStepsDiv = () => {
-    console.log(`drawing step div`)
-    const cardStepsDiv = document.createElement('ul');
-    cardStepsDiv.setAttribute('id', 'cardSteps');
-    return cardStepsDiv;
-}
-
-const drawCardStep = () => {
-    console.log('drawing the step!')
-    const stepDiv = document.createElement('li');
-    stepDiv.setAttribute('contenteditable', 'true');
-    stepDiv.setAttribute('class', 'stepDiv');
-    stepDiv.addEventListener('keydown', saveStep);
-    const cardStepsDiv = document.getElementById('cardSteps');
-    cardStepsDiv.appendChild(stepDiv);
-    return stepDiv;
-}
 
 const saveStep = (e) => {
     if(e.keyCode === 13){
@@ -479,7 +199,7 @@ const saveStep = (e) => {
         }
         
         
-        
+
     }
     
 
@@ -534,38 +254,11 @@ const deleteAndEraseDeck = (e) => {
     console.log(`AFTER DELETE currentDeck is ${currentDeck.deckName}`);
 }
 
-const drawDeleteButton = () => {
-    const cardDeleteButton = document.createElement('div');
-    cardDeleteButton.setAttribute('id', 'cardDelete');
-    cardDeleteButton.addEventListener('click', deleteAndEraseCard);
-    cardDeleteButton.classList.add('grow');
-    cardDeleteButton.textContent = '-'
-    return cardDeleteButton;
-}
 
-const drawDeckDeleteButton = () => {
-    const deckDeleteButton = document.createElement('div');
-    deckDeleteButton.setAttribute('id', 'deckDelete');
-    deckDeleteButton.addEventListener('click', deleteAndEraseDeck, true);
-    deckDeleteButton.textContent = '-'
-    return deckDeleteButton;
-}
 
-const drawTopCard = () => {
-    const cardDiv = document.createElement('div');
-    cardDiv.setAttribute('id', 'topCard');
-    cardDiv.setAttribute('class', 'cardBig');
-    cardArea.appendChild(cardDiv);
-    const cardTitleDiv = drawTitleDiv();
-    cardDiv.appendChild(cardTitleDiv);
-    const cardDateDiv = drawDateDiv();
-    cardDiv.appendChild(cardDateDiv);
-    const cardStepsDiv = drawStepsDiv();
-    cardDiv.appendChild(cardStepsDiv);
-    const cardDeleteButton = drawDeleteButton();
-    cardDiv.appendChild(cardDeleteButton);
-    return cardDiv;
-}
+
+
+
 
 const getBookmarkedCard = (aDeck) => {
     const thisBookmark = aDeck.bookmark;
@@ -594,57 +287,7 @@ const eraseSteps = () => {
     
 }
 
-const populateCard = () => {
-    eraseSteps();
-    console.log(currentDeck);
-    console.log(currentDeck.bookmark);
-    console.log(currentDeck.cardsArray[1]);
-    const theCard = getBookmarkedCard(currentDeck);
-    console.log('puopulating with: ' + theCard);
-    const cardTitleDiv = document.getElementById('cardTitle');
-    cardTitleDiv.classList.remove('bigPlus');
-    cardTitleDiv.classList.remove('grow');
-    cardTitleDiv.classList.add('cardTitle');
-    if(theCard !== undefined){
-        cardTitleDiv.textContent = theCard.cardName;
-    }
-    else {
-        console.log('making plus card')
-        cardTitleDiv.textContent = '+';
-        cardTitleDiv.setAttribute('class', 'bigPlus');
-        cardTitleDiv.setAttribute('contenteditable', false);
-        cardTitleDiv.classList.add('grow');
-        cardTitleDiv.addEventListener('click', showCardForm);
-    }
-    const cardDateDiv = document.getElementById('cardDate');
-    if(theCard !== undefined){
-        cardDateDiv.textContent = `Due date: ${theCard.cardDate}`;
-    }
-    else {
-        cardDateDiv.textContent = '';
-    }
 
-    const cardStepsDiv = document.getElementById('cardSteps');
-    console.log(cardStepsDiv);
-    console.log(typeof cardStepsDiv);
-    if(theCard !== undefined){
-        if(theCard.cardSteps.length > 1){
-            console.log('there are step(s)! DRAW STEP DIV(s)');
-            theCard.cardSteps.forEach(stepString => {
-                const aStep = drawCardStep();
-                aStep.textContent = stepString;
-            })
-        }
-        else{
-            console.log('the are no steps! DRAW empty STEP DIV');
-            drawCardStep();
-        }
-    }
-    else {
-        cardStepsDiv.textContent = '';
-    }
-    
-}
 
 const drawCardStack = (aDeck) => {
     console.log(aDeck);
@@ -681,30 +324,16 @@ const previousBookmark = () => {
     
 }
 
-const addEventListeners = (elementName, aFunction) =>{
-    const element = document.getElementById(`${elementName}`);
-    // console.log(element);
-    // console.log(aFunction);
-    element.addEventListener('click', aFunction);
-}
+
 
 const addForwardBackwardListeners = () => {
     addEventListeners('forwardButton', advanceBookmark);
     addEventListeners('backwardButton', previousBookmark);
 }
 
-const eraseTopCard = () => {
-    const oldCard = document.getElementById('topCard');
-    oldCard.remove();
-    drawTopCard();
-}
 
-const eraseDecks = () => {
-    const oldDecks = document.getElementsByClassName('deck');
-    Array.from(oldDecks).forEach(deckElement => {
-        deckElement.remove();
-    })
-}
+
+
 const createAndRenderDeck = (name) => {
     controller.createDeck(name);
     eraseDecks();
@@ -723,35 +352,11 @@ const createAndRenderCard = (name) => {
 
 let formType = 'deck';
 
-const resetDeckOptions = () => {
-    const deckSelector = document.getElementById('cardDeck');
-    Array.from(deckSelector).forEach(deckElement => {
-        deckElement.remove();
-    })
-}
-const setDeckOptions = () => {
-    resetDeckOptions();
-    deckArray.forEach(deckElement => {
-        const deckOption = document.createElement('option');
-        cardDeck.appendChild(deckOption);
-        deckOption.value = deckElement.deckName;
-        deckOption.textContent = deckElement.deckName;
-    })
-}
 
-const resetFormDeck = () => {
-    const aDiv = document.getElementById('card-title');
-    aDiv.value = '';
-}
 
-const resetFormCard = () => {
-    let aDiv = document.getElementById('card-title');
-    aDiv.value = '';
-    aDiv = document.getElementById('step');
-    aDiv.value = '';
-    aDiv.cardDate = document.getElementById('date').value;
-    aDiv.value = '';
-}
+
+
+
 
 const showForm = () => {
     // console.log('showing form!');
@@ -771,33 +376,9 @@ const hideForm = () => {
     aDiv.style.visibility = 'hidden';
 }
 
-const showDeckForm = () => {
-    showForm();
-    formType = 'deck';
-    let aDiv = document.getElementById('cardSteps');
-    aDiv.style.visibility = 'hidden';
-    aDiv = document.getElementById('date');
-    aDiv.style.visibility = 'hidden';
-    aDiv = document.getElementById('cardDeck');
-    aDiv.style.visibility = 'hidden';
-    aDiv = document.getElementById('card-title');
-    aDiv.style.gridRow = '3/4';
-    
-}
 
-const showCardForm = () => {
-    setDeckOptions();
-    showForm();
-    formType = 'card';
-    let aDiv = document.getElementById('step');
-    aDiv.style.visibility = 'visible';
-    aDiv = document.getElementById('date');
-    aDiv.style.visibility = 'visible';
-    aDiv = document.getElementById('cardDeck');
-    aDiv.style.visibility = 'visible';
-    aDiv = document.getElementById('card-title');
-    aDiv.style.gridRow = '1/2';
-}
+
+
 
 const saveDeck = () => {
     const aDiv = document.getElementById('card-title').value;
@@ -872,16 +453,16 @@ const saveForm = () => {
 }
 
 
-addEventListeners('addDeckButton', showDeckForm);
-addEventListeners('addCardButton', showCardForm);
-addEventListeners('cancel', hideForm);
-addEventListeners('check', saveForm);
+// addEventListeners('addDeckButton', showDeckForm);
+// addEventListeners('addCardButton', showCardForm);
+// addEventListeners('cancel', hideForm);
+// addEventListeners('check', saveForm);
 
 
-drawCardStack(defaultDeck);
-firstDrawDecks(deckArray);
-addForwardBackwardListeners();
-styleCurrent();
+// drawCardStack(defaultDeck);
+// firstDrawDecks(deckArray);
+// addForwardBackwardListeners();
+// styleCurrent();
 
 
 
