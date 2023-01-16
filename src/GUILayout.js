@@ -1,4 +1,5 @@
 const layout = () =>{
+    console.log(`drawing layout`);
     const content = document.createElement('div');
     content.setAttribute('id', 'content');
     document.body.appendChild(content);

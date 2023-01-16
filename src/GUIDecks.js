@@ -2,7 +2,7 @@ import deck from "./deck";
 import layout from "./GUILayout";
 import './style.css';
 
-const {deckArea} = layout();
+
 
 
 export const styleCurrent = (currentDeckDiv) => {
@@ -72,6 +72,7 @@ const firstDrawDecks = (arrayOfDecks) => {
 
 export const drawDecks = (arrayOfDecks) => {
     console.log('running drawDecks')
+    const deckArea = document.getElementById('deckArea');
     // console.log(deckArray[1]);
     arrayOfDecks.forEach(aDeck => {
             const deckDiv = document.createElement('div');
@@ -111,7 +112,7 @@ export const drawDecks = (arrayOfDecks) => {
 const drawDeckDeleteButton = () => {
     const deckDeleteButton = document.createElement('div');
     deckDeleteButton.setAttribute('id', 'deckDelete');
-    //deckDeleteButton.addEventListener('click', deleteAndEraseDeck, true);
+    deckDeleteButton.setAttribute('class', 'deckDelete');
     deckDeleteButton.textContent = '-'
     return deckDeleteButton;
 }

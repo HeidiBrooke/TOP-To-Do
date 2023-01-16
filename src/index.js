@@ -5,6 +5,8 @@ import gui from './GUI';
 
 let currentDeck = defaultDeck;
 let currentDeckDiv;
+let formValue = 0;
+let cardViewValue = 0;
 
 gui(deckArray, currentDeck);
 
@@ -15,6 +17,69 @@ const selectDeck = (e) => {
 
 }
 
+const addDeck = () => {
+    formValue = 1;
+    refresh();
+    formValue = 0;
+}
+
+const saveDeck = (e) => {
+        const titleText = document.getElementById('deck-title').value;
+        controller.createDeck(titleText);
+        clearForm();
+        refresh();  
+}
+
+const saveDeckOnEnter = (e) => {
+    if(e.keyCode === 13){
+        const titleText = document.getElementById('deck-title').value;
+        controller.createDeck(titleText);
+        clearForm();
+        refresh();
+    }
+
+}
+
+const clearForm = () => {
+    const form = document.getElementById('overLayHolder');
+    form.remove();
+}
+
+const deleteAndEraseDeck = (e) => {
+    console.log(`erasing and deleting deck.${currentDeck.deckName}`)
+    e.stopPropagation();
+    const deleteDiv = e.target;
+    const deckDiv = deleteDiv.parentElement;
+    const deckTitleDiv = deckDiv.firstChild;
+    const deckTitle = deckTitleDiv.textContent;
+    const currentDeckIndex = deckArray.indexOf(currentDeck);
+    console.log(`the index of the currenDeck is ${currentDeckIndex}`)
+    controller.deleteDeck(deckTitle);
+    if(currentDeck.deckName === deckTitle){
+        console.log(`the deck deleted was the current deck.`)
+        if(deckArray.length < 2){
+            currentDeck = all;
+        }
+        else {
+            currentDeck = deckArray[currentDeckIndex];
+            refresh();
+        }
+        refresh();
+    }
+    else{
+        refresh();
+    }
+    refresh();
+    console.log(`AFTER DELETE currentDeck is ${currentDeck.deckName}`);
+}
+
+const setDeckDeleteListeners = () => {
+    const divCollection = document.getElementsByClassName('deckDelete');
+    Array.from(divCollection).forEach(div => {
+        div.addEventListener('click', deleteAndEraseDeck)
+    })
+}
+
 const selectDeckListeners = () => {
     const deckCollection = document.getElementsByClassName('deck');
     Array.from(deckCollection).forEach(deckDiv => {
@@ -22,8 +87,32 @@ const selectDeckListeners = () => {
     })
 }
 
+const setPlusListeners = () => {
+    const addDeckDiv = document.getElementById('addDeckButton');
+    addDeckDiv.addEventListener('click', addDeck);
+}
+
+const setFormButtonListeners = () => {
+    const confirm = document.getElementById('check');
+    const cancel = document.getElementById('cancel');
+    const titleInput = document.getElementById('deck-title');
+    if(titleInput !== null){
+        titleInput.addEventListener('keyup', saveDeckOnEnter);
+    }
+    if(confirm !== null){
+        confirm.addEventListener('click', saveDeck);
+    }
+    if(cancel !== null){
+        cancel.addEventListener('click', clearForm);
+    }
+    
+}
+
 const setListeners = () => {
     selectDeckListeners();
+    setPlusListeners();
+    setFormButtonListeners();
+    setDeckDeleteListeners();
 }
 
 const eraseGUI = () => {
@@ -38,7 +127,7 @@ const eraseGUI = () => {
 }
 const refresh = () => {
     eraseGUI();
-    gui(deckArray, currentDeck);
+    gui(deckArray, currentDeck, formValue, cardViewValue);
     setListeners()
 }
 
@@ -139,8 +228,6 @@ const saveDeckTitle = (e) => {
 
 
 const saveTitle = (e) => {
-    
-
     // console.log('saving change to title');
     const text = e.target.textContent;
     // console.log(text);
@@ -224,35 +311,7 @@ const deleteAndEraseCard = () => {
     populateCard();
 }
 
-const deleteAndEraseDeck = (e) => {
-    console.log(`erasing and deleting deck.${currentDeck.deckName}`)
-    e.stopPropagation();
-    const deleteDiv = e.target;
-    const deckDiv = deleteDiv.parentElement;
-    const deckTitleDiv = deckDiv.firstChild;
-    const deckTitle = deckTitleDiv.textContent;
-    const currentDeckIndex = deckArray.indexOf(currentDeck);
-    console.log(`the index of the currenDeck is ${currentDeckIndex}`)
-    controller.deleteDeck(deckTitle);
-    if(currentDeck.deckName === deckTitle){
-        console.log(`the deck deleted was the current deck.`)
-        if(deckArray.length < 2){
-            currentDeck = all;
-        }
-        else {
-            currentDeck = deckArray[currentDeckIndex];
-            eraseDecks();
-            drawDecks(deckArray);
-        }
-        eraseDecks();
-        drawDecks(deckArray);
-    }
-    else{
-        eraseDecks();
-        drawDecks(deckArray);
-    }
-    console.log(`AFTER DELETE currentDeck is ${currentDeck.deckName}`);
-}
+
 
 
 
@@ -334,11 +393,7 @@ const addForwardBackwardListeners = () => {
 
 
 
-const createAndRenderDeck = (name) => {
-    controller.createDeck(name);
-    eraseDecks();
-    drawDecks(deckArray);
-}
+
 
 // const createCard = (name) => {
 //     controller.createCard(name);
@@ -380,12 +435,7 @@ const hideForm = () => {
 
 
 
-const saveDeck = () => {
-    const aDiv = document.getElementById('card-title').value;
-    createAndRenderDeck(aDiv);
-    resetFormDeck();
-    hideForm();
-}
+
 
 const saveCard = () => {
     let isCurrent = 0;

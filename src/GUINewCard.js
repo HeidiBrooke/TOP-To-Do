@@ -1,4 +1,6 @@
-const drawCardForm = (content) => {
+export const drawOverlay = () => {
+    console.log('drawing Overlay');
+    const content = document.getElementById('content');
     const overLayHolder = document.createElement('div');
     overLayHolder.setAttribute('class', 'content');
     overLayHolder.setAttribute('id', 'overLayHolder');
@@ -13,15 +15,36 @@ const drawCardForm = (content) => {
     formDiv.setAttribute('class', 'formDiv');
     overLayHolder.appendChild(formDiv);
     
-    const newCardForm = document.createElement('div');
-    newCardForm.setAttribute('class', 'cardBig');
-    newCardForm.classList.add('editSize');
-    newCardForm.setAttribute('id', 'newCardForm');
-    formDiv.appendChild(newCardForm);
+    const newForm = document.createElement('div');
+    newForm.setAttribute('class', 'cardBig');
+    newForm.classList.add('editSize');
+    newForm.setAttribute('id', 'newForm');
+    formDiv.appendChild(newForm);
+
+    const submitButtonsDiv = document.createElement('div');
+    submitButtonsDiv.setAttribute('class', 'submitButtonsDiv');
+    formDiv.appendChild(submitButtonsDiv);
     
+    const cancel = document.createElement('div');
+    cancel.setAttribute('class', 'check');
+    cancel.setAttribute('id', 'cancel');
+    cancel.classList.add('grow');
+    submitButtonsDiv.appendChild(cancel);
+    cancel.textContent = '✖';
+    
+    const check = document.createElement('div');
+    check.setAttribute('class', 'check');
+    submitButtonsDiv.appendChild(check);
+    check.setAttribute('id', 'check');
+    check.classList.add('grow');
+    check.textContent = '✓';
+}
+
+export const drawCardForm = () => {  
+    const newForm = document.getElementById('newForm');
     const cardForm = document.createElement('form');
     cardForm.setAttribute('class', 'cardForm');
-    newCardForm.appendChild(cardForm);
+    newForm.appendChild(cardForm);
     
     const cardTitleInput = document.createElement('input');
     cardTitleInput.setAttribute('class', 'cardTitleInput');
@@ -45,23 +68,7 @@ const drawCardForm = (content) => {
     stepHolder.setAttribute('id', 'stepHolder');
     cardForm.appendChild(stepHolder);
     
-    const submitButtonsDiv = document.createElement('div');
-    submitButtonsDiv.setAttribute('class', 'submitButtonsDiv');
-    formDiv.appendChild(submitButtonsDiv);
     
-    const cancel = document.createElement('div');
-    cancel.setAttribute('class', 'check');
-    cancel.setAttribute('id', 'cancel');
-    cancel.classList.add('grow');
-    submitButtonsDiv.appendChild(cancel);
-    cancel.textContent = '✖';
-    
-    const check = document.createElement('div');
-    check.setAttribute('class', 'check');
-    submitButtonsDiv.appendChild(check);
-    check.setAttribute('id', 'check');
-    check.classList.add('grow');
-    check.textContent = '✓';
     
     const drawStep = (aHolder) => {
         const step = document.createElement('input');
