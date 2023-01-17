@@ -17,7 +17,7 @@ const layout = () =>{
     container.appendChild(deckDock);
     
     const cardDock = document.createElement('div');
-    cardDock.setAttribute('id', 'table');
+    cardDock.setAttribute('id', 'cardDock');
     container.appendChild(cardDock);
     
     const logo = document.createElement('div');

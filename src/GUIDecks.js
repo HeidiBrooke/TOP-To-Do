@@ -70,6 +70,15 @@ const firstDrawDecks = (arrayOfDecks) => {
 
 }
 
+
+const drawDeckDeleteButton = () => {
+    const deckDeleteButton = document.createElement('div');
+    deckDeleteButton.setAttribute('id', 'deckDelete');
+    deckDeleteButton.setAttribute('class', 'deckDelete');
+    deckDeleteButton.textContent = '-'
+    return deckDeleteButton;
+}
+
 export const drawDecks = (arrayOfDecks) => {
     console.log('running drawDecks')
     const deckArea = document.getElementById('deckArea');
@@ -108,18 +117,4 @@ export const drawDecks = (arrayOfDecks) => {
     // styleCurrent();
     // console.log(currentDeckDiv);
 
-}
-const drawDeckDeleteButton = () => {
-    const deckDeleteButton = document.createElement('div');
-    deckDeleteButton.setAttribute('id', 'deckDelete');
-    deckDeleteButton.setAttribute('class', 'deckDelete');
-    deckDeleteButton.textContent = '-'
-    return deckDeleteButton;
-}
-
-const eraseDecks = () => {
-    const oldDecks = document.getElementsByClassName('deck');
-    Array.from(oldDecks).forEach(deckElement => {
-        deckElement.remove();
-    })
 }

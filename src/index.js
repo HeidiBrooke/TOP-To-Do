@@ -2,13 +2,70 @@ import * as controller from './controlls';
 import {defaultDeck, deckArray, all} from './controlls';
 import './style.css';
 import gui from './GUI';
+import card from './card';
+import {drawStep} from './GUINewCard';
 
 let currentDeck = defaultDeck;
+let currentCard;
 let currentDeckDiv;
 let formValue = 0;
 let cardViewValue = 0;
 
-gui(deckArray, currentDeck);
+const getBookmarkedCard = (aDeck) => {
+    console.log(`the current deck is ${aDeck}`);
+    const thisBookmark = aDeck.bookmark;
+    console.log(`the bookmakr is ${aDeck.bookmark}`);
+    let thisCardName = aDeck.cardsArray[thisBookmark];
+    console.log(`this card name is ${thisCardName}`);
+    const type = typeof(thisCardName);
+    if(type !== "string"){
+        if(thisCardName !== undefined){
+            thisCardName = thisCardName.cardName;
+        }
+    }
+    //console.log(`bookmrked crd is ${thisCardName}`);
+    const aCard = controller.getCard(thisCardName);
+    return aCard;
+}
+
+
+const updateCurrentCard = () => {
+    currentCard = getBookmarkedCard(currentDeck);
+    //console.log(`current card has been updated to ${currentCard.cardName}`);
+}
+
+updateCurrentCard();
+gui(deckArray, currentDeck, cardViewValue, currentCard);
+
+
+
+const advanceBookmark = () => {
+    console.log('running advance bookmark')
+    currentDeck.bookmark++;
+    if(currentDeck.cardsArray[currentDeck.bookmark] !== undefined){
+        refresh();
+    }
+    else{
+        currentDeck.bookmark--;
+        refresh();
+    }
+}
+
+const previousBookmark = () => {
+    console.log('running previous bookmark')
+    currentDeck.bookmark--;
+    console.log(currentDeck.bookmark);
+    if(currentDeck.cardsArray[currentDeck.bookmark] !== undefined){
+        console.log('bookmark was defined')
+        refresh();
+    }
+    else{
+        currentDeck.bookmark++;
+        console.log(currentDeck.bookmark);
+        refresh();
+    }
+    
+}
 
 const selectDeck = (e) => {
     const nameOfDeck = e.target.getAttribute('data-title');
@@ -20,7 +77,6 @@ const selectDeck = (e) => {
 const addDeck = () => {
     formValue = 1;
     refresh();
-    formValue = 0;
 }
 
 const saveDeck = (e) => {
@@ -41,6 +97,7 @@ const saveDeckOnEnter = (e) => {
 }
 
 const clearForm = () => {
+    formValue = 0;
     const form = document.getElementById('overLayHolder');
     form.remove();
 }
@@ -61,7 +118,7 @@ const deleteAndEraseDeck = (e) => {
             currentDeck = all;
         }
         else {
-            currentDeck = deckArray[currentDeckIndex];
+            currentDeck = deckArray[currentDeckIndex - 1];
             refresh();
         }
         refresh();
@@ -72,6 +129,8 @@ const deleteAndEraseDeck = (e) => {
     refresh();
     console.log(`AFTER DELETE currentDeck is ${currentDeck.deckName}`);
 }
+
+
 
 const setDeckDeleteListeners = () => {
     const divCollection = document.getElementsByClassName('deckDelete');
@@ -95,17 +154,155 @@ const setPlusListeners = () => {
 const setFormButtonListeners = () => {
     const confirm = document.getElementById('check');
     const cancel = document.getElementById('cancel');
-    const titleInput = document.getElementById('deck-title');
+    if(formValue === 1){
+        const titleInput = document.getElementById('deck-title');
     if(titleInput !== null){
         titleInput.addEventListener('keyup', saveDeckOnEnter);
     }
     if(confirm !== null){
         confirm.addEventListener('click', saveDeck);
     }
+    }
+    if(formValue === 2){
+        const titleInput = document.getElementById('card-title');
+    if(titleInput !== null){
+        //titleInput.addEventListener('keyup', saveCardOnEnter);
+    }
+    if(confirm !== null){
+        confirm.addEventListener('click', saveCard);
+    }
+    }
+    
     if(cancel !== null){
         cancel.addEventListener('click', clearForm);
     }
     
+}
+
+const saveTitle = (e) => {
+    // console.log('saving change to title');
+    const text = e.target.textContent;
+    // console.log(text);
+    // console.log(currentDeck.bookmark);
+    // console.log(currentDeck.cardsArray[currentDeck.bookmark]);
+    // currentDeck.cardsArray[currentDeck.bookmark] = text;
+    const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+    // console.log(theCard);
+    theCard.cardName = text;
+    currentDeck.cardsArray[currentDeck.bookmark] = text;
+    // console.log(theCard.cardName);
+}
+
+const saveStep = (e) => {
+    if(e.keyCode === 13){
+        e.preventDefault();
+        const initialText = e.target.textContent;
+        const stepString = e.target.textContent;
+        console.log(`stepString is ${stepString}`);
+        const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
+        const index = theCard.cardSteps.indexOf(stepString);
+        console.log(`the card steps are: ${theCard.cardSteps}`);
+        const text = e.target.textContent;
+        console.log(`text is ${text}`);
+        console.log(`index is ${index}`);
+        if(text !== ''){
+            if(theCard.cardSteps.length < 1){
+                
+                    console.log(`card steps less than 1`)
+                    theCard.cardSteps.push(text);
+                
+            }
+            else {
+                    if(theCard.cardSteps[index] === initialText){
+                        theCard.cardSteps[index] = text;
+                    }
+                    else {
+                        theCard.cardSteps.push(text);
+                    }
+                        
+                
+                    
+                }
+            const newStepDiv = drawCardStep();
+            newStepDiv.focus();
+            }
+            e.target.blur();
+            const cardStepsDiv = document.getElementById('cardSteps');
+            const thisStep = cardStepsDiv.lastChild;
+            // if(e.target.hasFocus() == false){
+            //     thisStep.remove();
+            // }
+            
+        }
+        
+        
+
+    }
+
+
+const deleteAndEraseCard = () => {
+    const thisCardName = document.getElementById('cardTitle').textContent;
+    console.log(`the card name gotten is ${thisCardName}`);
+    const thisCard = controller.getCard(thisCardName);
+    console.log(`the card returned was ${thisCard.cardName}`);
+    if(currentDeck === all){
+        thisCard.cardDecks.forEach(deckElement => {
+            const thisDeck = controller.getDeck(deckElement);
+            controller.deleteCardFromDeck(thisCard, thisDeck);
+        })
+        controller.deleteCard(thisCard);
+    }
+    else{
+        controller.deleteCardFromDeck(thisCard, currentDeck);
+    }
+    console.log(`current deck is still ${currentDeck.deckName}`);
+    console.log(`current deck length is ${currentDeck.cardsArray.length}`);
+    if(currentDeck.cardsArray.length < 2){
+        currentDeck.bookmark = 0;
+        console.log(`current deck bookmark is now${currentDeck.bookmark}`);
+    }
+    refresh(); 
+    // controller.deleteCard();
+    //populateCard();
+}
+
+const addCard = () => {
+    formValue = 2;
+    refresh();     
+}
+
+const setCardlisteners = () => {
+    const cardDeleteButton = document.getElementById('cardDelete')
+    if(cardDeleteButton !== null){
+        cardDeleteButton.addEventListener('click', deleteAndEraseCard);
+    }
+    
+    const stepDivs = document.getElementsByClassName('stepDiv');
+    if(stepDivs !== null){
+    Array.from(stepDivs).forEach(stepDiv => {
+       stepDiv.addEventListener('keydown', saveStep);
+    })
+    }
+    const cardTitleDiv = document.getElementById('cardTitle');
+    if(cardTitleDiv !== null){
+        cardTitleDiv.addEventListener('input', saveTitle);
+    }
+    const cardPlusDiv = document.getElementById('cardPlus');
+    if(cardPlusDiv !== null){
+        cardPlusDiv.addEventListener('click', addCard);
+    }
+}
+
+
+
+const addEventListeners = (elementName, aFunction) =>{
+    const element = document.getElementById(`${elementName}`);
+    element.addEventListener('click', aFunction);
+}
+
+const addForwardBackwardListeners = () => {
+    addEventListeners('forwardButton', advanceBookmark);
+    addEventListeners('backwardButton', previousBookmark);
 }
 
 const setListeners = () => {
@@ -113,6 +310,8 @@ const setListeners = () => {
     setPlusListeners();
     setFormButtonListeners();
     setDeckDeleteListeners();
+    setCardlisteners();
+    addForwardBackwardListeners();
 }
 
 const eraseGUI = () => {
@@ -126,25 +325,22 @@ const eraseGUI = () => {
     })
 }
 const refresh = () => {
+    updateCurrentCard();
     eraseGUI();
-    gui(deckArray, currentDeck, formValue, cardViewValue);
+    gui(deckArray, currentDeck, formValue, cardViewValue, currentCard);
     setListeners()
 }
 
 refresh();
 
-const addEventListeners = (elementName, aFunction) =>{
-    const element = document.getElementById(`${elementName}`);
-    element.addEventListener('click', aFunction);
+
+
+const eraseTopCard = () => {
+    const oldCard = document.getElementById('topCard');
+    oldCard.remove();
+    drawTopCard();
 }
 
-const addNewStepField = (e) => {
-    if(e.keyCode === 13){
-        console.log(`pressed ENTER`);
-        const step = drawStep();
-        step.focus();
-    }
-}
 
 const updateCurrentDeckDiv = () => {
     // console.log('im updateing the current DIV')
@@ -227,89 +423,15 @@ const saveDeckTitle = (e) => {
 
 
 
-const saveTitle = (e) => {
-    // console.log('saving change to title');
-    const text = e.target.textContent;
-    // console.log(text);
-    // console.log(currentDeck.bookmark);
-    // console.log(currentDeck.cardsArray[currentDeck.bookmark]);
-    // currentDeck.cardsArray[currentDeck.bookmark] = text;
-    const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
-    // console.log(theCard);
-    theCard.cardName = text;
-    currentDeck.cardsArray[currentDeck.bookmark] = text;
-    // console.log(theCard.cardName);
-}
 
 
 
-const saveStep = (e) => {
-    if(e.keyCode === 13){
-        e.preventDefault();
-        const initialText = e.target.textContent;
-        const stepString = e.target.textContent;
-        console.log(`stepString is ${stepString}`);
-        const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
-        const index = theCard.cardSteps.indexOf(stepString);
-        console.log(`the card steps are: ${theCard.cardSteps}`);
-        const text = e.target.textContent;
-        console.log(`text is ${text}`);
-        console.log(`index is ${index}`);
-        if(text !== ''){
-            if(theCard.cardSteps.length < 1){
-                
-                    console.log(`card steps less than 1`)
-                    theCard.cardSteps.push(text);
-                
-            }
-            else {
-                    if(theCard.cardSteps[index] === initialText){
-                        theCard.cardSteps[index] = text;
-                    }
-                    else {
-                        theCard.cardSteps.push(text);
-                    }
-                        
-                
-                    
-                }
-            const newStepDiv = drawCardStep();
-            newStepDiv.focus();
-            }
-            e.target.blur();
-            const cardStepsDiv = document.getElementById('cardSteps');
-            const thisStep = cardStepsDiv.lastChild;
-            // if(e.target.hasFocus() == false){
-            //     thisStep.remove();
-            // }
-            
-        }
-        
-        
 
-    }
+
     
 
 
 
-const deleteAndEraseCard = () => {
-    const thisCardName = document.getElementById('cardTitle').textContent;
-    const thisCard = controller.getCard(thisCardName);
-    if(currentDeck === all){
-        thisCard.cardDecks.forEach(deckElement => {
-            const thisDeck = controller.getDeck(deckElement);
-            controller.deleteCardFromDeck(thisCard, thisDeck);
-        })
-        controller.deleteCard(thisCard);
-    }
-    else{
-        controller.deleteCardFromDeck(thisCard, currentDeck);
-    }
-    
-    
-    // controller.deleteCard();
-    populateCard();
-}
 
 
 
@@ -319,22 +441,7 @@ const deleteAndEraseCard = () => {
 
 
 
-const getBookmarkedCard = (aDeck) => {
-    const thisBookmark = aDeck.bookmark;
-    let thisCardName = aDeck.cardsArray[thisBookmark];
-    const type = typeof(thisCardName);
-    if(type !== "string"){
-        if(thisCardName !== undefined){
-            thisCardName = thisCardName.cardName;
-        }
-  
-    }
-    console.log(`bookmrked crd is ${thisCardName}`);
-    const aCard = controller.getCard(thisCardName);
 
-    // console.log(aCard);
-    return aCard;
-}
 
 const eraseSteps = () => {
     const stepsDiv = document.getElementById('cardSteps');
@@ -348,47 +455,13 @@ const eraseSteps = () => {
 
 
 
-const drawCardStack = (aDeck) => {
-    console.log(aDeck);
-    drawBackgroundCards(2);
-    drawTopCard();
-    populateCard();    
-}
-
-const advanceBookmark = () => {
-    console.log('running advance bookmark')
-    currentDeck.bookmark++;
-    if(currentDeck.cardsArray[currentDeck.bookmark] !== undefined){
-        populateCard();
-    }
-    else{
-        currentDeck.bookmark--;
-        populateCard();
-    }
-}
-
-const previousBookmark = () => {
-    console.log('running previous bookmark')
-    currentDeck.bookmark--;
-    console.log(currentDeck.bookmark);
-    if(currentDeck.cardsArray[currentDeck.bookmark] !== undefined){
-        console.log('bookmark was defined')
-        populateCard();
-    }
-    else{
-        currentDeck.bookmark++;
-        console.log(currentDeck.bookmark);
-        populateCard();
-    }
-    
-}
 
 
 
-const addForwardBackwardListeners = () => {
-    addEventListeners('forwardButton', advanceBookmark);
-    addEventListeners('backwardButton', previousBookmark);
-}
+
+
+
+
 
 
 
@@ -400,10 +473,7 @@ const addForwardBackwardListeners = () => {
 //     populateCard();
 // }
 
-const createAndRenderCard = (name) => {
-    controller.createCard(name);
-    populateCard();
-}
+
 
 let formType = 'deck';
 
@@ -453,7 +523,7 @@ const saveCard = () => {
     if(collection.length < 2 ){
         const theSelectedDeck = collection[0].textContent;
         const theDeckName = theSelectedDeck;
-        updateCurrentDeckByName(theDeckName);
+        currentDeck = controller.getDeck(theDeckName);
     }
     console.log(`the current deck is now ${currentDeck}`);
     console.log(`selected options collection is ${collection}`);
@@ -481,9 +551,8 @@ const saveCard = () => {
     }
     console.log(`saving card. current deck is ${currentDeck}`);
     console.log(currentDeck.bookmark);
-    populateCard();
-    resetFormCard();
-    hideForm();
+    clearForm();
+    refresh();
     
 }
 

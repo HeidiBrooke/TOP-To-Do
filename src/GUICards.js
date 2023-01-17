@@ -1,3 +1,5 @@
+const drawForwardAndBackButtons = () => {
+    const cardArea = document.getElementById('cardArea');
     const forwardButton = document.createElement('div');
     forwardButton.setAttribute('class', 'nextButton');
     forwardButton.setAttribute('id', 'forwardButton');
@@ -9,22 +11,10 @@
     backwardButton.setAttribute('id', 'backwardButton');
     cardArea.appendChild(backwardButton);
     backwardButton.textContent = '<';
-
-const drawAllCardsStack = (aDeck) => {
-    const cardDiv = document.createElement('div');
-    cardDiv.setAttribute('id', 'cardBig');
-    cardDock.appendChild(cardDiv);
-    console.log(aDeck.cardsArray[aDeck.bookmark]);
-    const thisBookmark = aDeck.bookmark;
-    const theCard = aDeck.cardsArray[thisBookmark].cardName;
-
-    const cardTitleDiv = document.createElement('div');
-    cardTitleDiv.setAttribute('id', 'cardTitle');
-    cardDiv.appendChild(cardTitleDiv);
-    cardTitleDiv.textContent = theCard.CardName;
 }
 
 const drawBackgroundCards = (num) => {
+    const cardArea = document.getElementById('cardArea');
     for(let i = 0; i<num; i++ ){
     const fakeCard = document.createElement('div');
     fakeCard.setAttribute('class', 'cardBig');
@@ -38,64 +28,151 @@ const drawTitleDiv = () => {
     cardTitleDiv.setAttribute('id', 'cardTitle');
     cardTitleDiv.setAttribute('class', 'cardTitle');
     cardTitleDiv.setAttribute('contenteditable', 'true');
-    cardTitleDiv.addEventListener('input', saveTitle);
+    
     return cardTitleDiv;
 }
-
-const drawDateDiv = () => {
-    const cardDateDiv = document.createElement('div');
-    cardDateDiv.setAttribute('id', 'cardDate');
-    return cardDateDiv;
-}
-
 const drawStepsDiv = () => {
     console.log(`drawing step div`)
     const cardStepsDiv = document.createElement('ul');
     cardStepsDiv.setAttribute('id', 'cardSteps');
     return cardStepsDiv;
 }
-
 const drawCardStep = () => {
     console.log('drawing the step!')
     const stepDiv = document.createElement('li');
     stepDiv.setAttribute('contenteditable', 'true');
     stepDiv.setAttribute('class', 'stepDiv');
-    stepDiv.addEventListener('keydown', saveStep);
+    
     const cardStepsDiv = document.getElementById('cardSteps');
     cardStepsDiv.appendChild(stepDiv);
     return stepDiv;
 }
-
+const drawDateDiv = () => {
+    const cardDateDiv = document.createElement('div');
+    cardDateDiv.setAttribute('id', 'cardDate');
+    return cardDateDiv;
+}
 const drawDeleteButton = () => {
     const cardDeleteButton = document.createElement('div');
     cardDeleteButton.setAttribute('id', 'cardDelete');
-    cardDeleteButton.addEventListener('click', deleteAndEraseCard);
+    
     cardDeleteButton.classList.add('grow');
     cardDeleteButton.textContent = '-'
     return cardDeleteButton;
 }
 
-const drawTopCard = () => {
+const populateSteps = (currentCard) => {
+    const theCard = currentCard;
+    if(theCard.cardSteps.length > 1){
+        console.log('there are step(s)! DRAW STEP DIV(s)');
+        theCard.cardSteps.forEach(stepString => {
+            const aStep = drawCardStep();
+            aStep.textContent = stepString;
+        })
+    }
+    else{
+        console.log('the are no steps! DRAW empty STEP DIV');
+        drawCardStep();
+    }
+}
+
+const drawTopCard = (currentCard) => {
+    const cardArea = document.getElementById('cardArea');
     const cardDiv = document.createElement('div');
     cardDiv.setAttribute('id', 'topCard');
     cardDiv.setAttribute('class', 'cardBig');
     cardArea.appendChild(cardDiv);
     const cardTitleDiv = drawTitleDiv();
     cardDiv.appendChild(cardTitleDiv);
-    const cardDateDiv = drawDateDiv();
-    cardDiv.appendChild(cardDateDiv);
+    cardTitleDiv.textContent = currentCard.cardName;
     const cardStepsDiv = drawStepsDiv();
     cardDiv.appendChild(cardStepsDiv);
+    populateSteps(currentCard);
+    const cardDateDiv = drawDateDiv();
+    cardDiv.appendChild(cardDateDiv);
+    cardDateDiv.textContent = currentCard.date;
     const cardDeleteButton = drawDeleteButton();
     cardDiv.appendChild(cardDeleteButton);
     return cardDiv;
 }
 
-const populateCard = () => {
+const drawBlankTopCard = () => {
+    const cardArea = document.getElementById('cardArea');
+    const cardDiv = document.createElement('div');
+    cardDiv.setAttribute('id', 'topCard');
+    cardDiv.setAttribute('class', 'cardBig');
+    cardArea.appendChild(cardDiv);
+    const cardPlus = drawTitleDiv();
+    cardPlus.setAttribute('id', 'cardPlus')
+    console.log('making plus card')
+    cardPlus.textContent = '+';
+    cardPlus.setAttribute('class', 'bigPlus');
+    cardPlus.setAttribute('contenteditable', false);
+    cardPlus.classList.add('grow');
+    cardDiv.appendChild(cardPlus);
+}
+
+const drawBlankStack = () => {
+    drawForwardAndBackButtons();
+    drawBackgroundCards(2);
+    drawBlankTopCard();
+}
+
+
+
+const drawCardStack = (currentCard) => {
+    console.log(`drawing card stack`);
+    drawForwardAndBackButtons();
+    drawBackgroundCards(2);
+    drawTopCard(currentCard);   
+}
+
+const drawCards = (currentDeck,  cardViewValue, currentCard) => {
+    if(cardViewValue === 0) {
+        if(currentCard !== undefined){
+            drawCardStack(currentCard);
+        }
+        else(drawBlankStack());
+        
+    }
+
+}
+
+export default drawCards;
+
+
+const drawAllCardsStack = (aDeck) => {
+    const cardDock = document.getElementById('cardDock');
+    const cardDiv = document.createElement('div');
+    cardDiv.setAttribute('id', 'cardBig');
+    cardDock.appendChild(cardDiv);
+    console.log(aDeck.cardsArray[aDeck.bookmark]);
+    const thisBookmark = aDeck.bookmark;
+    const theCard = aDeck.cardsArray[thisBookmark].cardName;
+
+    const cardTitleDiv = document.createElement('div');
+    cardTitleDiv.setAttribute('id', 'cardTitle');
+    cardDiv.appendChild(cardTitleDiv);
+    cardTitleDiv.textContent = theCard.CardName;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const populateCard = (currentDeck) => {
     eraseSteps();
-    console.log(currentDeck);
-    console.log(currentDeck.bookmark);
-    console.log(currentDeck.cardsArray[1]);
     const theCard = getBookmarkedCard(currentDeck);
     console.log('puopulating with: ' + theCard);
     const cardTitleDiv = document.getElementById('cardTitle');
@@ -106,12 +183,7 @@ const populateCard = () => {
         cardTitleDiv.textContent = theCard.cardName;
     }
     else {
-        console.log('making plus card')
-        cardTitleDiv.textContent = '+';
-        cardTitleDiv.setAttribute('class', 'bigPlus');
-        cardTitleDiv.setAttribute('contenteditable', false);
-        cardTitleDiv.classList.add('grow');
-        cardTitleDiv.addEventListener('click', showCardForm);
+        
     }
     const cardDateDiv = document.getElementById('cardDate');
     if(theCard !== undefined){
@@ -143,8 +215,3 @@ const populateCard = () => {
     
 }
 
-const eraseTopCard = () => {
-    const oldCard = document.getElementById('topCard');
-    oldCard.remove();
-    drawTopCard();
-}

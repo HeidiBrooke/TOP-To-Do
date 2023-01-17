@@ -80,8 +80,6 @@ deckArray.push(defaultDeck);
         // console.log(name);
         if (cardElement.cardName === name) {
           console.log(`${cardElement.cardName} === ${name}`);
-          console.log(thisCard);
-          console.log(cardElement);
           thisCard = cardElement;
           console.log(thisCard);
         }
@@ -92,7 +90,7 @@ deckArray.push(defaultDeck);
     //     // );
     //     // theCard = getCard(cardName);
     //   }
-      console.log(thisCard)
+      //console.log(`the card getting returned is: ${thisCard.cardName}`)
       return thisCard;
     };
 

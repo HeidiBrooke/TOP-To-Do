@@ -40,7 +40,39 @@ export const drawOverlay = () => {
     check.textContent = '✓';
 }
 
-export const drawCardForm = () => {  
+const setDeckOptions = (deckArray, cardDeck) => {
+    deckArray.forEach(deckElement => {
+        const deckOption = document.createElement('option');
+        cardDeck.appendChild(deckOption);
+        deckOption.value = deckElement.deckName;
+        deckOption.textContent = deckElement.deckName;
+    })
+}
+
+const addNewStepField = (e) => {
+    if(e.keyCode === 13){
+        console.log(`pressed ENTER`);
+        const step = drawStep();
+        step.focus();
+    }
+}
+
+export const drawStep = () => {
+    const stepHolder = document.getElementById('stepHolder');
+    const step = document.createElement('input');
+    step.setAttribute('class', 'step');
+    step.classList.add('input');
+    stepHolder.appendChild(step);
+    step.setAttribute('id', 'step');
+    step.setAttribute('type', 'text');
+    step.setAttribute('name', 'step');
+    step.setAttribute('placeholder', '+ step');
+    step.addEventListener('keyup', addNewStepField);
+    
+    return step;
+}
+
+const drawCardFormFields = (deckArray) => {  
     const newForm = document.getElementById('newForm');
     const cardForm = document.createElement('form');
     cardForm.setAttribute('class', 'cardForm');
@@ -62,28 +94,15 @@ export const drawCardForm = () => {
     cardForm.appendChild(cardDeck);
     cardDeck.setAttribute('id', 'cardDeck');
     cardDeck.setAttribute('name', 'cardDeck');
+
+    setDeckOptions(deckArray, cardDeck);
     
     const stepHolder = document.createElement('div');
     stepHolder.classList.add('stepHolder');
     stepHolder.setAttribute('id', 'stepHolder');
     cardForm.appendChild(stepHolder);
     
-    
-    
-    const drawStep = (aHolder) => {
-        const step = document.createElement('input');
-        step.setAttribute('class', 'step');
-        step.classList.add('input');
-        aHolder.appendChild(step);
-        step.setAttribute('id', 'step');
-        step.setAttribute('type', 'text');
-        step.setAttribute('name', 'step');
-        step.setAttribute('placeholder', '+ step');
-        step.addEventListener('keyup', addNewStepField);
-        return step;
-    }
-    
-    drawStep(stepHolder);
+    drawStep();
     
     const date = document.createElement('input');
     date.setAttribute('class', 'date');
@@ -102,15 +121,8 @@ const resetDeckOptions = () => {
         deckElement.remove();
     })
 }
-const setDeckOptions = () => {
-    resetDeckOptions();
-    deckArray.forEach(deckElement => {
-        const deckOption = document.createElement('option');
-        cardDeck.appendChild(deckOption);
-        deckOption.value = deckElement.deckName;
-        deckOption.textContent = deckElement.deckName;
-    })
-}
+
+
 
 const resetFormCard = () => {
     let aDiv = document.getElementById('card-title');
@@ -134,3 +146,14 @@ const showCardForm = () => {
     aDiv = document.getElementById('card-title');
     aDiv.style.gridRow = '1/2';
 }
+
+export const drawNewCardForm = (deckArray, value) => {
+    console.log(`drawing new card form value is ${value}`)
+    if(value === 2){
+        drawOverlay();
+        drawCardFormFields(deckArray);
+    }
+}
+
+
+
