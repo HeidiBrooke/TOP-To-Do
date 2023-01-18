@@ -1,16 +1,43 @@
-import * as controller from './controlls';
-import {defaultDeck, deckArray, all} from './controlls';
+import * as controller from './logic/controlls';
+import {defaultDeck, deckArray, all} from './logic/controlls';
 import './style.css';
-import gui from './GUI';
-import card from './card';
-import {drawStep} from './GUINewCard';
-import { drawCardStep } from './GUICards';
+import gui from './GUI/GUI';
+import card from './logic/card';
+import {drawStep} from './GUI/GUINewCard';
+import { drawCardStep } from './GUI/GUICards';
+import { serializeData, deserializeDeckArray, deserializeCurrentDeckIndex } from './storage';
+import deck from './logic/deck';
 
-let currentDeck = defaultDeck;
+
+
 let currentCard;
 let currentDeckDiv;
 let formValue = 0;
 let cardViewValue = 0;
+let theDeckArray;
+let currentDeck = defaultDeck;
+
+theDeckArray = deckArray;
+
+const loadStorage = () => {
+    const storageExists = deserializeDeckArray('deckArray');
+    console.log(`StorageEists returns: ${storageExists}`);
+    if(storageExists !== null){
+        console.log(`${storageExists[0].deckName}`)
+        theDeckArray = storageExists;
+        const index = deserializeCurrentDeckIndex();
+        console.log(`the stored index is: ${index}`)
+        currentDeck = theDeckArray[index];
+    }
+    else{
+        theDeckArray = deckArray;
+        currentDeck = defaultDeck;
+    }
+}
+
+
+
+loadStorage();
 
 const getBookmarkedCard = (aDeck) => {
     console.log(`the current deck is ${aDeck}`);
@@ -34,7 +61,7 @@ const updateCurrentCard = () => {
 }
 
 updateCurrentCard();
-gui(deckArray, currentDeck, cardViewValue, currentCard);
+gui(theDeckArray, currentDeck, cardViewValue, currentCard);
 
 const advanceBookmark = () => {
     console.log('running advance bookmark')
@@ -530,8 +557,9 @@ const setListeners = () => {
 const refresh = () => {
     updateCurrentCard();
     eraseGUI();
-    gui(deckArray, currentDeck, formValue, cardViewValue, currentCard);
+    gui(theDeckArray, currentDeck, formValue, cardViewValue, currentCard);
     setListeners()
+    serializeData(theDeckArray, currentDeck);
 }
 
 refresh();

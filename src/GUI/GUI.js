@@ -10,7 +10,7 @@ let isInitialLoad = 0;
 const drawGUIInitial = (aDeckArray, aCurrentDeck, cardViewValue, currentCard) => {
     layout();
     drawDecks(aDeckArray);
-    console.log(`current card passed in is ${currentCard.cardName}`);
+    // console.log(`current card passed in is ${currentCard.cardName}`);
     drawCards(aCurrentDeck, cardViewValue, currentCard);
     
 }

@@ -1,6 +1,5 @@
-import deck from "./deck";
+import deck from "../logic/deck";
 import layout from "./GUILayout";
-import './style.css';
 
 export const styleCurrent = (currentDeckDiv) => {
     currentDeckDiv.classList.add('selectedDeck');  

@@ -1,9 +1,8 @@
-import "./style.css";
+import "../style.css";
 import card from "./card";
 import deck from "./deck";
 
 export const all = deck("all");
-console.log(all);
 export const deckArray = [];
 deckArray.push(all);
 export const table = deckArray;
@@ -115,30 +114,12 @@ deckArray.push(defaultDeck);
         
       });
       console.log("getting deck: " + theDeck.deckName);
-      // if (theDeck === undefined) {
-      //   const deckName = prompt(
-      //     "that deck does not exist, please enter another name:"
-      //   );
-      //   theDeck = getDeck(deckName);
-      // }
       console.log(theDeck);
       return theDeck;
     };
 
     export const createCard = (name) => {
-        // const theName = prompt('What is the name of the card?')
       const newCard = card(name);
-      // const nameOfDeck = prompt('what deck?');
-      // newCard.cardDecks.push(nameOfDeck);
-      // console.log(newCard.cardDecks);
-      // newCard.cardDecks.forEach(deckName => {
-      //   if(deckName !== 'all'){
-      //   const thisDeck = getDeck(deckName);
-      //   console.log('adding hte fullowing card to the following deck '+ newCard.cardName + " " + thisDeck.deckName);
-      //   addCardtoDeck(newCard, thisDeck)
-      //   }
-        
-      // })
     all.cardsArray.push(newCard);
     console.log(all.cardsArray);
     return newCard;
@@ -190,57 +171,39 @@ deckArray.push(defaultDeck);
       addCardtoDeck(thisCard, deckTwo);
     };
 
-    const viewCard = (theCardName) => {
-      const thisCard = getCard(theCardName);
-      for (const prop in thisCard) {
-        console.log(`obj.${prop} = ${thisCard[prop]}`);
-      }
-    };
-
-    const setDate = (theCardName) => {
-      const thisCard = getCard(theCardName);
-      const aDate = prompt("enter the due date in the form of MM.DD.YY:");
-      thisCard.cardDate = new Date(aDate);
-    };
-
-    const addStep = (theCardName) => {
-      const thisCard = getCard(theCardName);
-      const i = thisCard.cardSteps.length;
-      thisCard.cardSteps[i] = prompt("enter your step:");
-    };
-
-    const setStep = (theCardName) => {
-      const thisCard = getCard(theCardName);
-      const i = prompt("what index?");
-      thisCard.cardSteps[i] = prompt("enter your step:");
-    };
-
-    const setComplete = (theCardName) => {
-      const thisCard = getCard(theCardName);
-      thisCard.cardCompleteValue = Number(
-        prompt(
-          "is your task complete? If so, enter a '1' otherwise eneter '0'."
-        )
-      );
-    };
-
-    // return {
-    //   viewAll,
-    //   viewCard,
-    //   viewDeck,
-    //   createCard,
-    //   createDeck,
-    //   getCard,
-    //   getDeck,
-    //   addCardtoDeck,
-    //   deleteCardFromDeck,
-    //   deleteCard,
-    //   deleteDeck,
-    //   moveCard,
-    //   setDate,
-    //   addStep,
-    //   setComplete,
-    //   setStep,
+    // const viewCard = (theCardName) => {
+    //   const thisCard = getCard(theCardName);
+    //   for (const prop in thisCard) {
+    //     console.log(`obj.${prop} = ${thisCard[prop]}`);
+    //   }
     // };
+
+    // const setDate = (theCardName) => {
+    //   const thisCard = getCard(theCardName);
+    //   const aDate = prompt("enter the due date in the form of MM.DD.YY:");
+    //   thisCard.cardDate = new Date(aDate);
+    // };
+
+    // const addStep = (theCardName) => {
+    //   const thisCard = getCard(theCardName);
+    //   const i = thisCard.cardSteps.length;
+    //   thisCard.cardSteps[i] = prompt("enter your step:");
+    // };
+
+    // const setStep = (theCardName) => {
+    //   const thisCard = getCard(theCardName);
+    //   const i = prompt("what index?");
+    //   thisCard.cardSteps[i] = prompt("enter your step:");
+    // };
+
+    // const setComplete = (theCardName) => {
+    //   const thisCard = getCard(theCardName);
+    //   thisCard.cardCompleteValue = Number(
+    //     prompt(
+    //       "is your task complete? If so, enter a '1' otherwise eneter '0'."
+    //     )
+    //   );
+    // };
+
 
 

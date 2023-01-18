@@ -352,12 +352,6 @@ div {
     font-weight: 600;
 }
 
-
-.stepDiv{
-    /* background-color: aqua; */
-}
-
-
 #step:hover, #preStep:hover{
     box-shadow: none;
 }
@@ -372,9 +366,7 @@ div {
     grid-column: 1/5;
     grid-row: 2/7;
     font-size: 14px;
-    text-transform: capitalize;
-    /* margin: 4px;
-    margin-top: 8px; */
+    text-transform: none;
 }
 
 #cardDate{
