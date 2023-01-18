@@ -93,7 +93,7 @@ const drawTopCard = (currentCard) => {
     populateSteps(currentCard);
     const cardDateDiv = drawDateDiv();
     cardDiv.appendChild(cardDateDiv);
-    cardDateDiv.textContent = currentCard.cardDate;
+    cardDateDiv.textContent = `Due: ${currentCard.cardDate}`;
     const cardDeleteButton = drawDeleteButton();
     cardDiv.appendChild(cardDeleteButton);
     return cardDiv;

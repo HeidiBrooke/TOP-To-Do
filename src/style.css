@@ -369,8 +369,12 @@ div {
 }
 
 #cardSteps{
-    grid-column: 2/4;
+    grid-column: 1/5;
     grid-row: 2/7;
+    font-size: 14px;
+    text-transform: capitalize;
+    /* margin: 4px;
+    margin-top: 8px; */
 }
 
 #cardDate{
@@ -436,6 +440,12 @@ div {
     /* outline: 0px solid transparent; */
   }
 
+ul{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-right: 12px;
+}
 li {
     text-align: start;
 }
