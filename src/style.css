@@ -436,3 +436,6 @@ div {
     /* outline: 0px solid transparent; */
   }
 
+li {
+    text-align: start;
+}

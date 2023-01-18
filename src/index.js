@@ -147,43 +147,49 @@ const saveTitle = (e) => {
 }
 
 const saveStep = (e) => {
+    console.log(`SAVING STEP!`)
     if(e.keyCode === 13){
         e.preventDefault();
-        const initialText = e.target.textContent;
-        const stepString = e.target.textContent;
-        console.log(`stepString is ${stepString}`);
+        const dataIndex = e.target.getAttribute('data-index');
+        //const initialText = e.target.textContent;
+        //const stepString = e.target.textContent;
+        //console.log(`stepString is ${stepString}`);
         const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
-        const index = theCard.cardSteps.indexOf(stepString);
-        console.log(`the card steps are: ${theCard.cardSteps}`);
+        //const index = theCard.cardSteps.indexOf(stepString);
+        //console.log(`the card steps are: ${theCard.cardSteps}`);
         const text = e.target.textContent;
-        console.log(`text is ${text}`);
-        console.log(`index is ${index}`);
+        //console.log(`text is ${text}`);
+        //console.log(`index is ${index}`);
         if(text !== ''){
+            console.log(`Step is NOT empty`)
+            console.log(`The length of the array of steps is ${theCard.cardSteps.length}`)
+            console.log(`the stesp at dataIndex is ${theCard.cardSteps[dataIndex]}`);
             if(theCard.cardSteps.length < 1){
                     console.log(`card steps less than 1`)
                     theCard.cardSteps.push(text);
             }
-            else{
-                    if(theCard.cardSteps[index] === initialText){
-                        theCard.cardSteps[index] = text;
-                    }
-                    else {
-                        theCard.cardSteps.push(text);
-                    }
-                }
+            
+            else if (theCard.cardSteps[dataIndex] !== undefined) {
+                theCard.cardSteps[dataIndex] = text;
+            }
+            else {
+                theCard.cardSteps.push(text);
+            }
+            }
             const newStepDiv = drawCardStep();
             newStepDiv.addEventListener('input', saveStep);
             newStepDiv.addEventListener('keydown', stopEnterCard);
             newStepDiv.focus();
-            }
+
             e.target.blur();
             const cardStepsDiv = document.getElementById('cardSteps');
             const thisStep = cardStepsDiv.lastChild;
+            }
+            
             // if(e.target.hasFocus() === false){
             //     thisStep.remove();
             // }  
-        }
-    }
+}
 
 const deleteAndEraseCard = () => {
     const thisCardName = document.getElementById('cardTitle').textContent;
@@ -228,65 +234,86 @@ const eraseGUI = () => {
     })
 }
 
-const updateCurrentDeckDiv = () => {
-    // console.log('im updateing the current DIV')
-    const theCurrentDeckName = currentDeck.deckName;
-    // console.log('theCurrentDeckName is + ' + theCurrentDeckName);
-    const deckDivs = document.getElementsByClassName('deck');
-    Array.from(deckDivs).forEach(deckDiv => {
-        const titleDiv = deckDiv.children[0];
-        console.log(deckDiv);
-        console.log(theCurrentDeckName);
-        console.log(`does ${titleDiv} and ${theCurrentDeckName} match?`)
-        if(titleDiv.textContent === theCurrentDeckName){
-            currentDeckDiv = deckDiv;
-        }
-    })
+// const updateCurrentDeckDiv = () => {
+//     // console.log('im updateing the current DIV')
+//     const theCurrentDeckName = currentDeck.deckName;
+//     // console.log('theCurrentDeckName is + ' + theCurrentDeckName);
+//     const deckDivs = document.getElementsByClassName('deck');
+//     Array.from(deckDivs).forEach(deckDiv => {
+//         const titleDiv = deckDiv.children[0];
+//         console.log(deckDiv);
+//         console.log(theCurrentDeckName);
+//         console.log(`does ${titleDiv} and ${theCurrentDeckName} match?`)
+//         if(titleDiv.textContent === theCurrentDeckName){
+//             currentDeckDiv = deckDiv;
+//         }
+//     })
     
-    // console.log(deckDivs);
-    // Array.from(deckDivs).forEach(deckDiv => {
-    //     console.log('the deckTitleis '+ deckTitleDiv);
-    //     if(deckDiv.firstElementChild.textContent === theCurrentDeckName){
-    //         currentDeckDiv = deckDiv;
-    //     }
-    // })
+//     // console.log(deckDivs);
+//     // Array.from(deckDivs).forEach(deckDiv => {
+//     //     console.log('the deckTitleis '+ deckTitleDiv);
+//     //     if(deckDiv.firstElementChild.textContent === theCurrentDeckName){
+//     //         currentDeckDiv = deckDiv;
+//     //     }
+//     // })
+// }
+
+// const updateCurrentDeck = (e) => {
+//     removeSelectedStyle();
+//     // console.log('im UPDATInG!');
+//     console.log(e.target.innerHTML);
+//     if(e.target.classList.contains('deck')){
+//         console.log('clickedon DECK DIV')
+//         console.log(e.target.getAttribute('data-title'))
+//         const theDeckName = (e.target.getAttribute('data-title'));
+//         currentDeck = controller.getDeck(theDeckName);
+//     }
+//     else {
+//         console.log('clickedon TITLE DIV')
+//         console.log(e.target.textContent)
+//         const theDeckName = (e.target.textContent);
+//         currentDeck = controller.getDeck(theDeckName);
+//     }
+    
+//     // console.log('gonna update current deck div');
+//     updateCurrentDeckDiv();
+//     // console.log('gonna style current decDiv ' + currentDeckDiv);
+//     styleCurrent();
+//     populateCard();
+// }
+
+// const updateCurrentDeckByName = (name) => {
+//     removeSelectedStyle();
+//     // console.log('im UPDATInG!');
+    
+//     const theDeckName = name;
+//     currentDeck = controller.getDeck(theDeckName);
+//     // console.log('gonna update current deck div');
+//     updateCurrentDeckDiv();
+//     // console.log('gonna style current decDiv ' + currentDeckDiv);
+//     styleCurrent();
+//     populateCard();
+// }
+
+const saveDate = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const thisCardName = document.getElementById('cardTitle').textContent;
+    const thisCard = controller.getCard(thisCardName);
+    if(e.keyCode === 13){
+        thisCard.cardDate = e.target.value;
+        
+    }
+    refresh();
 }
 
-const updateCurrentDeck = (e) => {
-    removeSelectedStyle();
-    // console.log('im UPDATInG!');
-    console.log(e.target.innerHTML);
-    if(e.target.classList.contains('deck')){
-        console.log('clickedon DECK DIV')
-        console.log(e.target.getAttribute('data-title'))
-        const theDeckName = (e.target.getAttribute('data-title'));
-        currentDeck = controller.getDeck(theDeckName);
-    }
-    else {
-        console.log('clickedon TITLE DIV')
-        console.log(e.target.textContent)
-        const theDeckName = (e.target.textContent);
-        currentDeck = controller.getDeck(theDeckName);
-    }
-    
-    // console.log('gonna update current deck div');
-    updateCurrentDeckDiv();
-    // console.log('gonna style current decDiv ' + currentDeckDiv);
-    styleCurrent();
-    populateCard();
-}
-
-const updateCurrentDeckByName = (name) => {
-    removeSelectedStyle();
-    // console.log('im UPDATInG!');
-    
-    const theDeckName = name;
-    currentDeck = controller.getDeck(theDeckName);
-    // console.log('gonna update current deck div');
-    updateCurrentDeckDiv();
-    // console.log('gonna style current decDiv ' + currentDeckDiv);
-    styleCurrent();
-    populateCard();
+const editDate = (e) => {
+    const datePicker = document.createElement('input');
+    datePicker.setAttribute('type', 'date');
+    datePicker.setAttribute('class', 'input');
+    datePicker.style.position = 'absolute';
+    e.target.appendChild(datePicker);
+    datePicker.addEventListener('keydown', saveDate);
 }
 
 const saveDeckTitle = (e) => {
@@ -314,31 +341,31 @@ const stopEnterCard = (e) => {
         saveStep(e);
     }  
 }
-const eraseSteps = () => {
-    const stepsDiv = document.getElementById('cardSteps');
-    const steps = stepsDiv.children;
-    Array.from(steps).forEach(stepElement => {
-        console.log(`removing ${stepElement} from ${stepsDiv}`)
-        stepElement.remove();
-    })
+// const eraseSteps = () => {
+//     const stepsDiv = document.getElementById('cardSteps');
+//     const steps = stepsDiv.children;
+//     Array.from(steps).forEach(stepElement => {
+//         console.log(`removing ${stepElement} from ${stepsDiv}`)
+//         stepElement.remove();
+//     })
     
-}
-const showForm = () => {
-    // console.log('showing form!');
-    const form = document.getElementById('overLayHolder');
-    form.style.visibility = 'visible';
-}
-const hideForm = () => {
-    console.log('hiding form!');
-    const form = document.getElementById('overLayHolder');
-    form.style.visibility = 'hidden';
-    let aDiv = document.getElementById('step');
-    aDiv.style.visibility = 'hidden';
-    aDiv = document.getElementById('date');
-    aDiv.style.visibility = 'hidden';
-    aDiv = document.getElementById('cardDeck');
-    aDiv.style.visibility = 'hidden';
-}
+// }
+// const showForm = () => {
+//     // console.log('showing form!');
+//     const form = document.getElementById('overLayHolder');
+//     form.style.visibility = 'visible';
+// }
+// const hideForm = () => {
+//     console.log('hiding form!');
+//     const form = document.getElementById('overLayHolder');
+//     form.style.visibility = 'hidden';
+//     let aDiv = document.getElementById('step');
+//     aDiv.style.visibility = 'hidden';
+//     aDiv = document.getElementById('date');
+//     aDiv.style.visibility = 'hidden';
+//     aDiv = document.getElementById('cardDeck');
+//     aDiv.style.visibility = 'hidden';
+// }
 const saveCard = () => {
     let isCurrent = 0;
     let aCard = document.getElementById('card-title').value;
@@ -387,18 +414,18 @@ const saveCard = () => {
     refresh();
     
 }
-const saveForm = () => {
-    // console.log('save type is: '+ formType);
-    if(formType ==='deck'){
-        console.log('saving deck!')
-        saveDeck();
-    }
-    else if(formType === 'card'){
-        console.log('saving card!')
-        saveCard();
-        populateCard();
-    }
-}
+// const saveForm = () => {
+//     // console.log('save type is: '+ formType);
+//     if(formType ==='deck'){
+//         console.log('saving deck!')
+//         saveDeck();
+//     }
+//     else if(formType === 'card'){
+//         console.log('saving card!')
+//         saveCard();
+//         populateCard();
+//     }
+// }
 const setDeckDeleteListeners = () => {
     const divCollection = document.getElementsByClassName('deckDelete');
     Array.from(divCollection).forEach(div => {
@@ -474,6 +501,11 @@ const setCardlisteners = () => {
     if(cardPlusDiv !== null){
         cardPlusDiv.addEventListener('click', addCard);
     }
+    const cardDateDiv = document.getElementById('cardDate');
+    if(cardDateDiv !== null){
+        cardDateDiv.addEventListener('click', editDate);
+    }
+
 }
 
 const addEventListeners = (elementName, aFunction) =>{

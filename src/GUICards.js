@@ -43,7 +43,6 @@ export const drawCardStep = () => {
     const stepDiv = document.createElement('li');
     stepDiv.setAttribute('contenteditable', 'true');
     stepDiv.setAttribute('class', 'stepDiv');
-    
     const cardStepsDiv = document.getElementById('cardSteps');
     cardStepsDiv.appendChild(stepDiv);
     return stepDiv;
@@ -51,6 +50,7 @@ export const drawCardStep = () => {
 const drawDateDiv = () => {
     const cardDateDiv = document.createElement('div');
     cardDateDiv.setAttribute('id', 'cardDate');
+    cardDateDiv.setAttribute('contenteditable', 'true');
     return cardDateDiv;
 }
 const drawDeleteButton = () => {
@@ -64,10 +64,12 @@ const drawDeleteButton = () => {
 
 const populateSteps = (currentCard) => {
     const theCard = currentCard;
-    if(theCard.cardSteps.length > 1){
+    if(theCard.cardSteps.length >= 1){
         console.log('there are step(s)! DRAW STEP DIV(s)');
         theCard.cardSteps.forEach(stepString => {
+            const index = theCard.cardSteps.indexOf(stepString);
             const aStep = drawCardStep();
+            aStep.setAttribute('data-index', `${index}`);
             aStep.textContent = stepString;
         })
     }

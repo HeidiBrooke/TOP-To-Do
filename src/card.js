@@ -1,7 +1,7 @@
 const card = (name) => {
   const cardName = name;
   const cardSteps = [];
-  const cardDate = "";
+  const cardDate = new Date().toLocaleDateString();
   const cardCompleteValue = 0;
   const cardDecks = ["all"];
   return {
