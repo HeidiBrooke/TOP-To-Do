@@ -18,6 +18,7 @@ defaultCard.cardSteps.push(`Press the next arrow to the right to see the next ca
 defaultCard2.cardSteps.push(`Click the delete button on a card to remove from the current (selected) deck.`);
 defaultCard2.cardSteps.push(`To permanently delete a card, delete from the all deck.`);
 defaultCard2.cardSteps.push(`Create cards or decks by pressing the '+' buttons.`);
+defaultCard2.cardSteps.push(`More great features and Local Storage coming soon!`);
 defaultDeck.cardsArray.push(defaultCard.cardName);
 defaultDeck.cardsArray.push(defaultCard2.cardName);
 deckArray.push(defaultDeck);
