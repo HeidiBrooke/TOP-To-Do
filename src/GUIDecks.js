@@ -2,9 +2,6 @@ import deck from "./deck";
 import layout from "./GUILayout";
 import './style.css';
 
-
-
-
 export const styleCurrent = (currentDeckDiv) => {
     currentDeckDiv.classList.add('selectedDeck');  
 }
@@ -90,6 +87,7 @@ export const drawDecks = (arrayOfDecks) => {
 
             const deckTitleDiv = document.createElement('div');
             deckTitleDiv.setAttribute('id', 'deckTitle');
+            deckTitleDiv.setAttribute('class', 'deckTitle');
             deckDiv.appendChild(deckTitleDiv);
             deckTitleDiv.textContent = aDeck.deckName;
 
@@ -102,7 +100,7 @@ export const drawDecks = (arrayOfDecks) => {
 
             //deckDiv.addEventListener('click', updateCurrentDeck);
             // deckTitleDiv.addEventListener('click', updateCurrentDeck);
-            //deckTitleDiv.addEventListener('input', saveDeckTitle);
+            
             // editDeck.addEventListener('click', showForm);
         if((arrayOfDecks.indexOf(aDeck)) !== 0){
             const deckDeleteButton = drawDeckDeleteButton();

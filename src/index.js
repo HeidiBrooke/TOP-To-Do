@@ -4,6 +4,7 @@ import './style.css';
 import gui from './GUI';
 import card from './card';
 import {drawStep} from './GUINewCard';
+import { drawCardStep } from './GUICards';
 
 let currentDeck = defaultDeck;
 let currentCard;
@@ -27,8 +28,6 @@ const getBookmarkedCard = (aDeck) => {
     const aCard = controller.getCard(thisCardName);
     return aCard;
 }
-
-
 const updateCurrentCard = () => {
     currentCard = getBookmarkedCard(currentDeck);
     //console.log(`current card has been updated to ${currentCard.cardName}`);
@@ -36,8 +35,6 @@ const updateCurrentCard = () => {
 
 updateCurrentCard();
 gui(deckArray, currentDeck, cardViewValue, currentCard);
-
-
 
 const advanceBookmark = () => {
     console.log('running advance bookmark')
@@ -68,7 +65,13 @@ const previousBookmark = () => {
 }
 
 const selectDeck = (e) => {
-    const nameOfDeck = e.target.getAttribute('data-title');
+    e.preventDefault();
+    e.stopPropagation();
+    let nameOfDeck = e.target.getAttribute('data-title');
+    console.log(`nameOfDeck is ${nameOfDeck}`)
+    // if(nameOfDeck === null){
+    //     nameOfDeck = e.target.parentElement.getAttribute('data-title');
+    // }
     currentDeck = controller.getDeck(nameOfDeck);
     refresh();
 
@@ -79,7 +82,7 @@ const addDeck = () => {
     refresh();
 }
 
-const saveDeck = (e) => {
+const saveDeck = () => {
         const titleText = document.getElementById('deck-title').value;
         controller.createDeck(titleText);
         clearForm();
@@ -130,67 +133,17 @@ const deleteAndEraseDeck = (e) => {
     console.log(`AFTER DELETE currentDeck is ${currentDeck.deckName}`);
 }
 
-
-
-const setDeckDeleteListeners = () => {
-    const divCollection = document.getElementsByClassName('deckDelete');
-    Array.from(divCollection).forEach(div => {
-        div.addEventListener('click', deleteAndEraseDeck)
-    })
-}
-
-const selectDeckListeners = () => {
-    const deckCollection = document.getElementsByClassName('deck');
-    Array.from(deckCollection).forEach(deckDiv => {
-       deckDiv.addEventListener('click', selectDeck);
-    })
-}
-
-const setPlusListeners = () => {
-    const addDeckDiv = document.getElementById('addDeckButton');
-    addDeckDiv.addEventListener('click', addDeck);
-}
-
-const setFormButtonListeners = () => {
-    const confirm = document.getElementById('check');
-    const cancel = document.getElementById('cancel');
-    if(formValue === 1){
-        const titleInput = document.getElementById('deck-title');
-    if(titleInput !== null){
-        titleInput.addEventListener('keyup', saveDeckOnEnter);
-    }
-    if(confirm !== null){
-        confirm.addEventListener('click', saveDeck);
-    }
-    }
-    if(formValue === 2){
-        const titleInput = document.getElementById('card-title');
-    if(titleInput !== null){
-        //titleInput.addEventListener('keyup', saveCardOnEnter);
-    }
-    if(confirm !== null){
-        confirm.addEventListener('click', saveCard);
-    }
-    }
-    
-    if(cancel !== null){
-        cancel.addEventListener('click', clearForm);
-    }
-    
-}
-
 const saveTitle = (e) => {
-    // console.log('saving change to title');
+    console.log('saving change to title');
     const text = e.target.textContent;
-    // console.log(text);
-    // console.log(currentDeck.bookmark);
-    // console.log(currentDeck.cardsArray[currentDeck.bookmark]);
-    // currentDeck.cardsArray[currentDeck.bookmark] = text;
+    console.log(text);
+    console.log(currentDeck.bookmark);
+    console.log(currentDeck.cardsArray[currentDeck.bookmark]);
     const theCard = controller.getCard(currentDeck.cardsArray[currentDeck.bookmark]);
-    // console.log(theCard);
+    console.log(theCard);
     theCard.cardName = text;
     currentDeck.cardsArray[currentDeck.bookmark] = text;
-    // console.log(theCard.cardName);
+    console.log(theCard.cardName);
 }
 
 const saveStep = (e) => {
@@ -207,38 +160,30 @@ const saveStep = (e) => {
         console.log(`index is ${index}`);
         if(text !== ''){
             if(theCard.cardSteps.length < 1){
-                
                     console.log(`card steps less than 1`)
                     theCard.cardSteps.push(text);
-                
             }
-            else {
+            else{
                     if(theCard.cardSteps[index] === initialText){
                         theCard.cardSteps[index] = text;
                     }
                     else {
                         theCard.cardSteps.push(text);
                     }
-                        
-                
-                    
                 }
             const newStepDiv = drawCardStep();
+            newStepDiv.addEventListener('input', saveStep);
+            newStepDiv.addEventListener('keydown', stopEnterCard);
             newStepDiv.focus();
             }
             e.target.blur();
             const cardStepsDiv = document.getElementById('cardSteps');
             const thisStep = cardStepsDiv.lastChild;
-            // if(e.target.hasFocus() == false){
+            // if(e.target.hasFocus() === false){
             //     thisStep.remove();
-            // }
-            
+            // }  
         }
-        
-        
-
     }
-
 
 const deleteAndEraseCard = () => {
     const thisCardName = document.getElementById('cardTitle').textContent;
@@ -271,48 +216,6 @@ const addCard = () => {
     refresh();     
 }
 
-const setCardlisteners = () => {
-    const cardDeleteButton = document.getElementById('cardDelete')
-    if(cardDeleteButton !== null){
-        cardDeleteButton.addEventListener('click', deleteAndEraseCard);
-    }
-    
-    const stepDivs = document.getElementsByClassName('stepDiv');
-    if(stepDivs !== null){
-    Array.from(stepDivs).forEach(stepDiv => {
-       stepDiv.addEventListener('keydown', saveStep);
-    })
-    }
-    const cardTitleDiv = document.getElementById('cardTitle');
-    if(cardTitleDiv !== null){
-        cardTitleDiv.addEventListener('input', saveTitle);
-    }
-    const cardPlusDiv = document.getElementById('cardPlus');
-    if(cardPlusDiv !== null){
-        cardPlusDiv.addEventListener('click', addCard);
-    }
-}
-
-
-
-const addEventListeners = (elementName, aFunction) =>{
-    const element = document.getElementById(`${elementName}`);
-    element.addEventListener('click', aFunction);
-}
-
-const addForwardBackwardListeners = () => {
-    addEventListeners('forwardButton', advanceBookmark);
-    addEventListeners('backwardButton', previousBookmark);
-}
-
-const setListeners = () => {
-    selectDeckListeners();
-    setPlusListeners();
-    setFormButtonListeners();
-    setDeckDeleteListeners();
-    setCardlisteners();
-    addForwardBackwardListeners();
-}
 
 const eraseGUI = () => {
     const decks = document.getElementsByClassName('deck');
@@ -324,23 +227,6 @@ const eraseGUI = () => {
         cardElement.remove();
     })
 }
-const refresh = () => {
-    updateCurrentCard();
-    eraseGUI();
-    gui(deckArray, currentDeck, formValue, cardViewValue, currentCard);
-    setListeners()
-}
-
-refresh();
-
-
-
-const eraseTopCard = () => {
-    const oldCard = document.getElementById('topCard');
-    oldCard.remove();
-    drawTopCard();
-}
-
 
 const updateCurrentDeckDiv = () => {
     // console.log('im updateing the current DIV')
@@ -365,11 +251,6 @@ const updateCurrentDeckDiv = () => {
     //     }
     // })
 }
-
-
-
-
-
 
 const updateCurrentDeck = (e) => {
     removeSelectedStyle();
@@ -408,41 +289,31 @@ const updateCurrentDeckByName = (name) => {
     populateCard();
 }
 
-
-
-
-
-
 const saveDeckTitle = (e) => {
     // console.log('saving change to title');
+    e.preventDefault();
+    e.stopPropagation();
     const text = e.target.textContent;
     currentDeck.deckName = text;
 }
 
+const stopEnter = (e) => {
+    // console.log('saving change to title');
+    if(e.keyCode === 13){
+        e.preventDefault();
+        saveDeckTitle(e);
+        e.target.blur();
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
+   
+}
+const stopEnterCard = (e) => {
+    // console.log('saving change to title');
+    if(e.keyCode === 13){
+        e.preventDefault();
+        saveStep(e);
+    }  
+}
 const eraseSteps = () => {
     const stepsDiv = document.getElementById('cardSteps');
     const steps = stepsDiv.children;
@@ -452,43 +323,11 @@ const eraseSteps = () => {
     })
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const createCard = (name) => {
-//     controller.createCard(name);
-//     populateCard();
-// }
-
-
-
-let formType = 'deck';
-
-
-
-
-
-
-
 const showForm = () => {
     // console.log('showing form!');
     const form = document.getElementById('overLayHolder');
     form.style.visibility = 'visible';
 }
-
 const hideForm = () => {
     console.log('hiding form!');
     const form = document.getElementById('overLayHolder');
@@ -500,13 +339,6 @@ const hideForm = () => {
     aDiv = document.getElementById('cardDeck');
     aDiv.style.visibility = 'hidden';
 }
-
-
-
-
-
-
-
 const saveCard = () => {
     let isCurrent = 0;
     let aCard = document.getElementById('card-title').value;
@@ -555,9 +387,6 @@ const saveCard = () => {
     refresh();
     
 }
-
-
-
 const saveForm = () => {
     // console.log('save type is: '+ formType);
     if(formType ==='deck'){
@@ -570,18 +399,113 @@ const saveForm = () => {
         populateCard();
     }
 }
+const setDeckDeleteListeners = () => {
+    const divCollection = document.getElementsByClassName('deckDelete');
+    Array.from(divCollection).forEach(div => {
+        div.addEventListener('click', deleteAndEraseDeck)
+    })
+}
 
+const selectDeckListeners = () => {
+    const deckCollection = document.getElementsByClassName('deck');
+    Array.from(deckCollection).forEach(deckDiv => {
+       deckDiv.addEventListener('click', selectDeck);
+    })
+    const deckTitleDivs = document.getElementsByClassName('deckTitle');
+    Array.from(deckTitleDivs).forEach(deckTitleDiv => {
+        deckTitleDiv.addEventListener('input', saveDeckTitle);
+        deckTitleDiv.addEventListener('keydown', stopEnter);
+    })
+    
+}
 
-// addEventListeners('addDeckButton', showDeckForm);
-// addEventListeners('addCardButton', showCardForm);
-// addEventListeners('cancel', hideForm);
-// addEventListeners('check', saveForm);
+const setPlusListeners = () => {
+    const addDeckDiv = document.getElementById('addDeckButton');
+    addDeckDiv.addEventListener('click', addDeck);
+    const addCardDiv = document.getElementById('addCardButton');
+    addCardDiv.addEventListener('click', addCard);
+}
 
+const setFormButtonListeners = () => {
+    const confirm = document.getElementById('check');
+    const cancel = document.getElementById('cancel');
+    if(formValue === 1){
+        const titleInput = document.getElementById('deck-title');
+    if(titleInput !== null){
+        titleInput.addEventListener('keyup', saveDeckOnEnter);
+    }
+    if(confirm !== null){
+        confirm.addEventListener('click', saveDeck);
+    }
+    }
+    if(formValue === 2){
+        const titleInput = document.getElementById('card-title');
+    if(titleInput !== null){
+        //titleInput.addEventListener('keyup', saveCardOnEnter);
+    }
+    if(confirm !== null){
+        confirm.addEventListener('click', saveCard);
+    }
+    }
+    
+    if(cancel !== null){
+        cancel.addEventListener('click', clearForm);
+    }
+    
+}
 
-// drawCardStack(defaultDeck);
-// firstDrawDecks(deckArray);
-// addForwardBackwardListeners();
-// styleCurrent();
+const setCardlisteners = () => {
+    const cardDeleteButton = document.getElementById('cardDelete')
+    if(cardDeleteButton !== null){
+        cardDeleteButton.addEventListener('click', deleteAndEraseCard);
+    }
+    const stepDivs = document.getElementsByClassName('stepDiv');
+    if(stepDivs !== null){
+    Array.from(stepDivs).forEach(stepDiv => {
+       stepDiv.addEventListener('keydown', saveStep);
+    })
+    }
+    const cardTitleDiv = document.getElementById('cardTitle');
+    if(cardTitleDiv !== null){
+        cardTitleDiv.addEventListener('input', saveTitle);
+        cardTitleDiv.addEventListener('keydown', stopEnterCard);
+    }
+    const cardPlusDiv = document.getElementById('cardPlus');
+    if(cardPlusDiv !== null){
+        cardPlusDiv.addEventListener('click', addCard);
+    }
+}
 
+const addEventListeners = (elementName, aFunction) =>{
+    const element = document.getElementById(`${elementName}`);
+    element.addEventListener('click', aFunction);
+}
 
+const addForwardBackwardListeners = () => {
+    addEventListeners('forwardButton', advanceBookmark);
+    addEventListeners('backwardButton', previousBookmark);
+}
 
+const setListeners = () => {
+    selectDeckListeners();
+    setPlusListeners();
+    setFormButtonListeners();
+    setDeckDeleteListeners();
+    setCardlisteners();
+    addForwardBackwardListeners();
+}
+
+const refresh = () => {
+    updateCurrentCard();
+    eraseGUI();
+    gui(deckArray, currentDeck, formValue, cardViewValue, currentCard);
+    setListeners()
+}
+
+refresh();
+
+// const eraseTopCard = () => {
+//     const oldCard = document.getElementById('topCard');
+//     oldCard.remove();
+//     drawTopCard();
+// }

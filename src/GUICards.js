@@ -37,7 +37,8 @@ const drawStepsDiv = () => {
     cardStepsDiv.setAttribute('id', 'cardSteps');
     return cardStepsDiv;
 }
-const drawCardStep = () => {
+
+export const drawCardStep = () => {
     console.log('drawing the step!')
     const stepDiv = document.createElement('li');
     stepDiv.setAttribute('contenteditable', 'true');
@@ -90,7 +91,7 @@ const drawTopCard = (currentCard) => {
     populateSteps(currentCard);
     const cardDateDiv = drawDateDiv();
     cardDiv.appendChild(cardDateDiv);
-    cardDateDiv.textContent = currentCard.date;
+    cardDateDiv.textContent = currentCard.cardDate;
     const cardDeleteButton = drawDeleteButton();
     cardDiv.appendChild(cardDeleteButton);
     return cardDiv;
@@ -117,8 +118,6 @@ const drawBlankStack = () => {
     drawBackgroundCards(2);
     drawBlankTopCard();
 }
-
-
 
 const drawCardStack = (currentCard) => {
     console.log(`drawing card stack`);
@@ -155,21 +154,6 @@ const drawAllCardsStack = (aDeck) => {
     cardDiv.appendChild(cardTitleDiv);
     cardTitleDiv.textContent = theCard.CardName;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const populateCard = (currentDeck) => {
     eraseSteps();
