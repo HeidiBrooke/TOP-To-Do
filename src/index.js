@@ -1,11 +1,11 @@
 import * as controller from './logic/controlls';
-import {defaultDeck, deckArray, all} from './logic/controlls';
+import {defaultDeck, deckArray, theAllDeck} from './logic/controlls';
 import './style.css';
 import gui from './GUI/GUI';
 import card from './logic/card';
 import {drawStep} from './GUI/GUINewCard';
 import { drawCardStep } from './GUI/GUICards';
-import { serializeData, deserializeDeckArray, deserializeCurrentDeckIndex } from './storage';
+import { serializeData, deserializeDeckArray, deserializeCurrentDeckIndex, deserializeAllCards, deserializeAllDeck } from './storage';
 import deck from './logic/deck';
 
 
@@ -16,18 +16,19 @@ let formValue = 0;
 let cardViewValue = 0;
 let theDeckArray;
 let currentDeck = defaultDeck;
-
+let all = theAllDeck;
 theDeckArray = deckArray;
 
 const loadStorage = () => {
-    const storageExists = deserializeDeckArray('deckArray');
+    const storageExists = deserializeDeckArray();
     console.log(`StorageEists returns: ${storageExists}`);
     if(storageExists !== null){
-        console.log(`${storageExists[0].deckName}`)
+        // console.log(`${storageExists[0].deckName}`)
         theDeckArray = storageExists;
         const index = deserializeCurrentDeckIndex();
         console.log(`the stored index is: ${index}`)
         currentDeck = theDeckArray[index];
+        all = deserializeAllDeck('all');
     }
     else{
         theDeckArray = deckArray;
@@ -37,7 +38,7 @@ const loadStorage = () => {
 
 
 
-loadStorage();
+//loadStorage();
 
 const getBookmarkedCard = (aDeck) => {
     console.log(`the current deck is ${aDeck}`);

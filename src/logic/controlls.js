@@ -2,15 +2,15 @@ import "../style.css";
 import card from "./card";
 import deck from "./deck";
 
-export const all = deck("all");
+export const theAllDeck = deck("all");
 export const deckArray = [];
-deckArray.push(all);
+deckArray.push(theAllDeck);
 export const table = deckArray;
 export const defaultDeck = deck('To-Do');
 export const defaultCard = card('Get Groceries');
 export const defaultCard2 = card('Mail Thank You Notes');
-all.cardsArray.push(defaultCard);
-all.cardsArray.push(defaultCard2);
+theAllDeck.cardsArray.push(defaultCard);
+theAllDeck.cardsArray.push(defaultCard2);
 defaultCard.cardSteps.push(`This is task card.`);
 defaultCard.cardSteps.push(`Click on any text field to edit the property`);
 defaultCard.cardSteps.push(`Press the next arrow to the right to see the next card.`);
@@ -24,9 +24,9 @@ deckArray.push(defaultDeck);
 
 
     const viewAll = () => {
-      console.log(`All cards are: ${all}`);
+      console.log(`All cards are: ${theAllDeck}`);
       console.log(`all decks are: ${table}`);
-      all.cardsArray.forEach((cardElement) => {
+      theAllDeck.cardsArray.forEach((cardElement) => {
         console.log(`all + ${cardElement}`);
       });
     };
@@ -47,7 +47,7 @@ deckArray.push(defaultDeck);
         }
       });
       if (wasMatched === false) {
-        currentDeck = all;
+        currentDeck = theAllDeck;
         console.log(currentDeck);
         console.log(typeof currentDeck);
       }
@@ -80,8 +80,8 @@ deckArray.push(defaultDeck);
       let thisCard;
       // console.log(thisCard);
       // console.log(all.length);
-      console.log(all.cardsArray);
-      all.cardsArray.forEach((cardElement) => {
+      console.log(theAllDeck.cardsArray);
+      theAllDeck.cardsArray.forEach((cardElement) => {
         // console.log(cardElement.cardName);
         // console.log(name);
         if (cardElement.cardName === name) {
@@ -120,8 +120,8 @@ deckArray.push(defaultDeck);
 
     export const createCard = (name) => {
       const newCard = card(name);
-    all.cardsArray.push(newCard);
-    console.log(all.cardsArray);
+    theAllDeck.cardsArray.push(newCard);
+    console.log(theAllDeck.cardsArray);
     return newCard;
     
     };
@@ -141,12 +141,12 @@ deckArray.push(defaultDeck);
       const cardDiv = document.getElementById('cardTitle');
       const aCardName = cardDiv.textContent;
       const thisCard = getCard(aCardName);
-      const index = all.cardsArray.indexOf(thisCard);
+      const index = theAllDeck.cardsArray.indexOf(thisCard);
       if (index > -1) {
-        all.cardsArray.splice(index, 1);
+        theAllDeck.cardsArray.splice(index, 1);
       }
-      console.log(all);
-      return all;
+      console.log(theAllDeck);
+      return theAllDeck;
     };
 
     export const deleteDeck = (aDeckName) => {
