@@ -128,7 +128,7 @@ const drawCardStack = (currentCard) => {
     drawTopCard(currentCard);   
 }
 
-const drawCards = (currentDeck,  cardViewValue, currentCard) => {
+const drawCards = (cardViewValue, currentCard) => {
     if(cardViewValue === 0) {
         if(currentCard !== undefined){
             drawCardStack(currentCard);

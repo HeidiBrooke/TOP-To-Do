@@ -27,8 +27,10 @@ const loadStorage = () => {
         theDeckArray = storageExists;
         const index = deserializeCurrentDeckIndex();
         console.log(`the stored index is: ${index}`)
+        console.log(`the current Deck should be: ${theDeckArray[index].deckName}`)
         currentDeck = theDeckArray[index];
-        all = deserializeAllDeck('all');
+        console.log(`the current Deck should be: ${theDeckArray[index].deckName}`)
+        all = theDeckArray[0];
     }
     else{
         theDeckArray = deckArray;
@@ -36,9 +38,7 @@ const loadStorage = () => {
     }
 }
 
-
-
-//loadStorage();
+loadStorage();
 
 const getBookmarkedCard = (aDeck) => {
     console.log(`the current deck is ${aDeck}`);
@@ -560,6 +560,12 @@ const refresh = () => {
     eraseGUI();
     gui(theDeckArray, currentDeck, formValue, cardViewValue, currentCard);
     setListeners()
+    console.log(`The curent deck going in is: ${currentDeck.deckName}`)
+    console.log(`The deckArray going in is: ${theDeckArray}`)
+    theDeckArray.forEach(deck => {
+        console.log(`${deck.deckName}, ${theDeckArray.indexOf(deck)}`);
+    })
+    console.log(`${theDeckArray.indexOf(currentDeck)}`);
     serializeData(theDeckArray, currentDeck);
 }
 

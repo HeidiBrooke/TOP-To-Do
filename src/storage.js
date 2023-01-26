@@ -1,7 +1,7 @@
 import card from "./logic/card";
 
-const serializeDeck = (deckObj, theDeckArray) => {
-    const index = theDeckArray.indexOf(deckObj);
+const serializeDeck = (deckObj, aDeckArray) => {
+    const index = aDeckArray.indexOf(deckObj);
     const deckSerialized = JSON.stringify(deckObj);
     localStorage.setItem(`${index}`, deckSerialized);
 }
@@ -72,34 +72,43 @@ const serializeAllDecks = (aDeckArray) => {
 }
 
 const serializeDeckArray = (aDeckArray) => {
-    const theDeckArray = aDeckArray;
-    const serAll = serializeAllCards(theDeckArray[0]);
-    theDeckArray[0] = serAll;
-    let index;
-    theDeckArray.forEach(deckObj => {
-        index = theDeckArray.indexOf(deckObj);
-        if(index !== 0){
-            theDeckArray[index] = serializeDeck(deckObj, aDeckArray);
-        }
-    })
-
+    //const theDeckArray = aDeckArray;
+    //const serAll = serializeAllCards(theDeckArray[0]);
+    // theDeckArray[0] = serAll;
+    // let index;
+    // theDeckArray.forEach(deckObj => {
+    //     index = theDeckArray.indexOf(deckObj);
+    //     if(index !== 0){
+    //         theDeckArray[index] = serializeDeck(deckObj, aDeckArray);
+    //     }
+    // })
     console.log(`the deck array tobe serialized is ${aDeckArray}`)
     const deckArraySerialized = JSON.stringify(aDeckArray);
+    console.log(`The serialized deckArray is: ${deckArraySerialized}`)
     localStorage.setItem(`deckArray`, deckArraySerialized);
 }
 
 export const deserializeDeckArray = () => {
-    let index;
+    // let index;
     const deckArrayDeserialized = JSON.parse(localStorage.getItem('deckArray'));
-    deckArrayDeserialized.forEach(serDeck => {
-        index = deckArrayDeserialized.indexOf(serDeck);
-        deckArrayDeserialized[index] = deserializeDeck(index)
-    })
+    // deckArrayDeserialized.forEach(serDeck => {
+    //     index = deckArrayDeserialized.indexOf(serDeck);
+    //     deckArrayDeserialized[index] = deserializeDeck(index)
+    // })
     return deckArrayDeserialized;
 }
 
 export const serializeData = (aDeckArray, aCurrentDeck) =>{
-    const index = aDeckArray.indexOf(aCurrentDeck);
+    console.log(typeof aCurrentDeck);
+    let index;
+    aDeckArray.forEach(deck => {
+        console.log(`${deck.deckName}, ${aDeckArray.indexOf(deck)}`);
+        if(aCurrentDeck.deckName === deck.deckName){
+            index = aDeckArray.indexOf(deck);
+        }
+    })
+    // console.log(`${aDeckArray.indexOf(aCurrentDeck)}`);
+    // const index = aDeckArray.indexOf(aCurrentDeck);
     console.log(`the index is ${index}`)
     console.log(`the currentDeck is ${aCurrentDeck.deckName}`)
     serializeCurrentDeckIndex(index);
